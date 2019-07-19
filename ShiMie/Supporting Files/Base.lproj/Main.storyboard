@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="yLL-jy-DfP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -13,41 +13,58 @@
         <!--Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MapViewController" customModule="What2Eat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MapViewController" customModule="ShiMie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lUM-tb-Qgu" customClass="MAMapView">
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="94I-eb-NQz" customClass="ExpandButtonView" customModule="ShiMie" customModuleProvider="target">
+                                <rect key="frame" x="354" y="64" width="40" height="235"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="235" id="hF9-Yo-G8O"/>
+                                    <constraint firstAttribute="width" constant="40" id="mGP-GP-3cg"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="amD-fU-NsV">
+                                <rect key="frame" x="158" y="422" width="97" height="51"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <state key="normal" title="Search"/>
+                                <connections>
+                                    <action selector="seach:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DxH-IA-1sF"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="94I-eb-NQz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="Ghe-Ny-ksI"/>
+                            <constraint firstItem="lUM-tb-Qgu" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="IR2-9z-2uu"/>
+                            <constraint firstAttribute="bottom" secondItem="lUM-tb-Qgu" secondAttribute="bottom" id="i4k-t0-tMa"/>
+                            <constraint firstItem="lUM-tb-Qgu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="lRe-Cq-qRK"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lUM-tb-Qgu" secondAttribute="trailing" id="tmA-NY-WSr"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="94I-eb-NQz" secondAttribute="trailing" constant="20" id="zNR-Db-qhX"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="bgY-ir-gNw"/>
+                    <connections>
+                        <outlet property="expandButtonView" destination="94I-eb-NQz" id="maJ-qm-Qud"/>
+                        <outlet property="mapView" destination="lUM-tb-Qgu" id="PhE-i7-rPe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1243" y="559"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="7fz-kn-UA2">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yLL-jy-DfP" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yr1-Hx-D7a">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="lRM-hB-V9B" kind="relationship" relationship="rootViewController" id="E50-gR-5rG"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="msd-2y-yOi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="267" y="119"/>
+            <point key="canvasLocation" x="-701.44927536231887" y="557.8125"/>
         </scene>
         <!--Card List View Controller-->
         <scene sceneID="nFU-Dz-h88">
             <objects>
-                <viewController id="lRM-hB-V9B" customClass="CardListViewController" customModule="What2Eat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="lRM-hB-V9B" customClass="CardListViewController" customModule="ShiMie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SU6-DT-SsS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -58,7 +75,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="41i-Rw-S7q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2109" y="119"/>
+            <point key="canvasLocation" x="346" y="558"/>
         </scene>
     </scenes>
 </document>

@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17109D6722DE275C00CA0198 /* AmapStyle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 17109D6622DE275C00CA0198 /* AmapStyle.bundle */; };
 		179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CD22D832DA0085BE33 /* CardListView.swift */; };
 		179EF1D022DA2E860085BE33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CF22DA2E860085BE33 /* Utils.swift */; };
+		179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */; };
 		17EDBED722D079FA004689AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBED622D079FA004689AB /* AppDelegate.swift */; };
 		17EDBED922D079FA004689AB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBED822D079FA004689AB /* MapViewController.swift */; };
 		17EDBEDC22D079FA004689AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBEDA22D079FA004689AB /* Main.storyboard */; };
-		17EDBEDE22D079FB004689AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBEDD22D079FB004689AB /* Assets.xcassets */; };
 		17EDBEE122D079FB004689AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBEDF22D079FB004689AB /* LaunchScreen.storyboard */; };
 		17EDBF0B22D07AC0004689AB /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBF0A22D07AC0004689AB /* Podfile */; };
 		17EDBF1422D0AB4B004689AB /* CardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBF1322D0AB4B004689AB /* CardListViewController.swift */; };
@@ -22,13 +23,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17109D6622DE275C00CA0198 /* AmapStyle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AmapStyle.bundle; sourceTree = "<group>"; };
 		179EF1CD22D832DA0085BE33 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 		179EF1CF22DA2E860085BE33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandButtonView.swift; sourceTree = "<group>"; };
 		17EDBED322D079FA004689AB /* ShiMie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShiMie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17EDBED622D079FA004689AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17EDBED822D079FA004689AB /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		17EDBEDB22D079FA004689AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		17EDBEDD22D079FB004689AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17EDBEE022D079FB004689AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17EDBEE222D079FB004689AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17EDBF0A22D07AC0004689AB /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -56,6 +58,7 @@
 		17EDBECA22D079FA004689AB = {
 			isa = PBXGroup;
 			children = (
+				17109D6622DE275C00CA0198 /* AmapStyle.bundle */,
 				17EDBED522D079FA004689AB /* ShiMie */,
 				17EDBF0A22D07AC0004689AB /* Podfile */,
 				17EDBED422D079FA004689AB /* Products */,
@@ -79,6 +82,7 @@
 				17EDBF1922D0BF52004689AB /* RestaurantCardView.swift */,
 				17EDBF0C22D07B9D004689AB /* Supporting Files */,
 				17EDBED822D079FA004689AB /* MapViewController.swift */,
+				179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */,
 				17EDBF1322D0AB4B004689AB /* CardListViewController.swift */,
 				17EDBF1522D0AC27004689AB /* Restaurant.swift */,
 				17EDBEE222D079FB004689AB /* Info.plist */,
@@ -91,7 +95,6 @@
 			children = (
 				17EDBF1022D08970004689AB /* bridging.h */,
 				17EDBED622D079FA004689AB /* AppDelegate.swift */,
-				17EDBEDD22D079FB004689AB /* Assets.xcassets */,
 				17EDBEDF22D079FB004689AB /* LaunchScreen.storyboard */,
 				17EDBEDA22D079FA004689AB /* Main.storyboard */,
 				179EF1CF22DA2E860085BE33 /* Utils.swift */,
@@ -176,8 +179,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17109D6722DE275C00CA0198 /* AmapStyle.bundle in Resources */,
 				17EDBEE122D079FB004689AB /* LaunchScreen.storyboard in Resources */,
-				17EDBEDE22D079FB004689AB /* Assets.xcassets in Resources */,
 				17EDBF0B22D07AC0004689AB /* Podfile in Resources */,
 				17EDBEDC22D079FA004689AB /* Main.storyboard in Resources */,
 			);
@@ -217,7 +220,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ShiMie/Pods-ShiMie-resources.sh",
-				"${PODS_ROOT}/AMap2DMap/MAMapKit.framework/AMap.bundle",
+				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
@@ -237,6 +240,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */,
 				17EDBF1622D0AC27004689AB /* Restaurant.swift in Sources */,
 				17EDBF1422D0AB4B004689AB /* CardListViewController.swift in Sources */,
 				17EDBED922D079FA004689AB /* MapViewController.swift in Sources */,

@@ -9,7 +9,7 @@
 import Foundation
 
 extension CGPoint {
-    func offset(_ dx: CGFloat, _ dy: CGFloat) -> CGPoint {
+    func offset(dx: CGFloat, dy: CGFloat) -> CGPoint {
         return CGPoint(x: self.x + dx, y: self.y + dy)
     }
     
@@ -19,13 +19,21 @@ extension CGPoint {
 }
 
 extension CGSize {
-    func offset(_ dw: CGFloat, _ dh: CGFloat) -> CGSize {
+    func offset(dw: CGFloat, dh: CGFloat) -> CGSize {
         return CGSize(width: self.width+dw, height: self.height+dh)
     }
 }
 
 extension CGRect {
     var center: CGPoint {
-        return self.origin.offset(self.width / 2, self.height / 2)
+        return self.origin.offset(dx: self.width / 2, dy: self.height / 2)
+    }
+    
+    var leftBottom: CGPoint {
+        return self.origin.offset(dx: 0, dy: self.height)
+    }
+    
+    var rightBottom: CGPoint {
+        return self.origin.offset(dx: self.width, dy: self.height)
     }
 }
