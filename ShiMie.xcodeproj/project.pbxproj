@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		17109D6722DE275C00CA0198 /* AmapStyle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 17109D6622DE275C00CA0198 /* AmapStyle.bundle */; };
+		172B5A6E22EF07DA00BFB2BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */; };
 		179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CD22D832DA0085BE33 /* CardListView.swift */; };
 		179EF1D022DA2E860085BE33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CF22DA2E860085BE33 /* Utils.swift */; };
 		179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		17109D6622DE275C00CA0198 /* AmapStyle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AmapStyle.bundle; sourceTree = "<group>"; };
+		172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		179EF1CD22D832DA0085BE33 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 		179EF1CF22DA2E860085BE33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandButtonView.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 		17EDBF0C22D07B9D004689AB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */,
 				17EDBF1022D08970004689AB /* bridging.h */,
 				17EDBED622D079FA004689AB /* AppDelegate.swift */,
 				17EDBEDF22D079FB004689AB /* LaunchScreen.storyboard */,
@@ -183,6 +186,7 @@
 				17EDBEE122D079FB004689AB /* LaunchScreen.storyboard in Resources */,
 				17EDBF0B22D07AC0004689AB /* Podfile in Resources */,
 				17EDBEDC22D079FA004689AB /* Main.storyboard in Resources */,
+				172B5A6E22EF07DA00BFB2BD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

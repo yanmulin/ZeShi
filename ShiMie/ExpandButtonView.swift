@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 class ExpandButtonView: UIView {
     
-    @IBInspectable var expand = true {
+    @IBInspectable var expand = false {
         didSet {
             if expand {
                 slider?.isHidden = false
@@ -21,24 +21,51 @@ class ExpandButtonView: UIView {
         }
     }
     
-    lazy var upperButtonBoxView = makeButtonBoxView(in: upperButtonBoxRect, upsideDown: false)
-    lazy var lowerButtonBoxView = makeButtonBoxView(in: lowerButtonBoxRect, upsideDown: true)
-    lazy var sliderBoxView = makeSliderBoxView()
     var slider: UISlider? {
         didSet {
             if let slider = slider {
                 slider.isHidden = !expand
                 slider.frame = CGRect(x: 0, y: 0, width: sliderHeight, height: sliderWidth)
                 slider.transform = CGAffineTransform.identity
-                    .translatedBy(x: -sliderHeight/2 + sliderWidth/2, y: sliderBoxHeight/2 - sliderWidth/2)
+                    .translatedBy(x: -sliderHeight/2 + sliderWidth/2, y: sliderHeight/2 - sliderWidth/3)
                     .rotated(by: CGFloat.pi / 2)
                 sliderBoxView.addSubview(slider)
             }
         }
     }
     
+    var upperButton: UIButton? {
+        didSet {
+            if let oldValue = oldValue {
+                oldValue.removeFromSuperview()
+            }
+            if let newButton = self.upperButton {
+                newButton.frame = CGRect(origin: CGPoint.zero, size: upperButtonBoxRect.size)
+                upperButtonBoxView.addSubview(newButton)
+                newButton.center = upperButtonBoxView.bounds.center
+            }
+        }
+    }
+    
+    var lowerButton: UIButton? {
+        didSet {
+            if let oldValue = oldValue {
+                oldValue.removeFromSuperview()
+            }
+            if let newButton = self.lowerButton {
+                newButton.frame = CGRect(origin: CGPoint.zero, size: lowerButtonBoxRect.size)
+                lowerButtonBoxView.addSubview(newButton)
+                newButton.center = lowerButtonBoxView.bounds.center
+            }
+        }
+    }
+    
+    private lazy var upperButtonBoxView = makeButtonBoxView(in: upperButtonBoxRect, upsideDown: false)
+    private lazy var lowerButtonBoxView = makeButtonBoxView(in: lowerButtonBoxRect, upsideDown: true)
+    private lazy var sliderBoxView = makeSliderBoxView()
+    
     func makeButtonBoxView(in rect: CGRect, upsideDown: Bool) -> UIView {
-        let view = UIView()
+        let view = UIView(frame: rect)
         view.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = makeButtonBoxPath(in: CGRect(x: 0, y: 0, width: rect.width, height: rect.height), inverse: upsideDown).cgPath
@@ -46,8 +73,6 @@ class ExpandButtonView: UIView {
         shapeLayer.strokeColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         shapeLayer.lineWidth = mediumLineWidth
         view.layer.addSublayer(shapeLayer)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapButtonHandler(_:)))
-        view.addGestureRecognizer(tap)
         addSubview(view)
         return view
     }
@@ -76,12 +101,6 @@ class ExpandButtonView: UIView {
         view.clipsToBounds = true
         addSubview(view)
         return view
-    }
-    
-    
-    // MARKER: Gesture Recognizers
-    @objc private func tapButtonHandler(_ gr: UIGestureRecognizer) {
-        expand = !expand
     }
     
     // MARKER: Layout functions

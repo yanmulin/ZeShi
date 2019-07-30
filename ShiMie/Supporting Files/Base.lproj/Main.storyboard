@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -30,29 +31,52 @@
                                     <constraint firstAttribute="width" constant="40" id="mGP-GP-3cg"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="amD-fU-NsV">
-                                <rect key="frame" x="158" y="422" width="97" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                                <state key="normal" title="Search"/>
-                                <connections>
-                                    <action selector="seach:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DxH-IA-1sF"/>
-                                </connections>
-                            </button>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zR3-bZ-9r7">
+                                <rect key="frame" x="30" y="792" width="354" height="34"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ga7-dL-7wS">
+                                        <rect key="frame" x="0.0" y="0.0" width="37" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="取消"/>
+                                        <connections>
+                                            <action selector="cancelEditMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2Ya-8I-QXD"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="编辑模式" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53P-am-9to">
+                                        <rect key="frame" x="128.5" y="2.5" width="97.5" height="29"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gz-8j-dGz">
+                                        <rect key="frame" x="317" y="0.0" width="37" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="确定"/>
+                                        <connections>
+                                            <action selector="confirmEditMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SWF-Ou-Vi1"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="zR3-bZ-9r7" secondAttribute="bottom" constant="70" id="0Fv-Gk-UFX"/>
+                            <constraint firstItem="zR3-bZ-9r7" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="AAT-uZ-odF"/>
                             <constraint firstItem="94I-eb-NQz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="Ghe-Ny-ksI"/>
                             <constraint firstItem="lUM-tb-Qgu" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="IR2-9z-2uu"/>
+                            <constraint firstItem="zR3-bZ-9r7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="MG3-Sh-kXF"/>
                             <constraint firstAttribute="bottom" secondItem="lUM-tb-Qgu" secondAttribute="bottom" id="i4k-t0-tMa"/>
                             <constraint firstItem="lUM-tb-Qgu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="lRe-Cq-qRK"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lUM-tb-Qgu" secondAttribute="trailing" id="tmA-NY-WSr"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zR3-bZ-9r7" secondAttribute="trailing" constant="30" id="vLn-T8-cg8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="94I-eb-NQz" secondAttribute="trailing" constant="20" id="zNR-Db-qhX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="bgY-ir-gNw"/>
                     <connections>
+                        <outlet property="editModeBannerView" destination="zR3-bZ-9r7" id="5Ro-kU-TaU"/>
                         <outlet property="expandButtonView" destination="94I-eb-NQz" id="maJ-qm-Qud"/>
                         <outlet property="mapView" destination="lUM-tb-Qgu" id="PhE-i7-rPe"/>
                     </connections>

@@ -8,128 +8,158 @@
 
 import UIKit
 
+// TODO: 手画定位点
+// TODO: 进入一次自动定位，后面手动定位
+// TODO: editingCircle位置计算错误
+
 class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerDelegate, AMapSearchDelegate, UIGestureRecognizerDelegate {
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        slider.value = Float(searchRadius)
-        setMapZoomLevel()
+    @IBOutlet weak var mapView: MAMapView!
+    
+    private var searchRadius: Double = 200
+    private var searchCircle: MACircle? {
+        didSet {
+            if let oldValue = oldValue {
+                mapView.remove(oldValue)
+            }
+            if let searchCircle = self.searchCircle {
+                mapView.add(searchCircle)
+            }
+        }
+    }
+    lazy private var editingCircle = { () -> CAShapeLayer in
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.backgroundColor = MapViewController.searchCircleFillColor.cgColor
+        shapeLayer.borderColor = MapViewController.searchCircleStrokeColor.cgColor
+        shapeLayer.borderWidth = MapViewController.searchCircleStrokeLineWidth
+        shapeLayer.isHidden = true
+        view.layer.addSublayer(shapeLayer)
+        return shapeLayer
+    }()
+    
+    private var restaurantAnnotations = [MAAnnotation]()
+    
+    @IBOutlet weak var expandButtonView: ExpandButtonView!
+    private var slider = UISlider()
+    
+    private var locateButton = UIButton()
+    private var editButton = UIButton()
+    
+    
+    @IBOutlet weak var editModeBannerView: UIStackView!
+    
+    private var mode = MapViewMode.normal {
+        didSet {
+            if self.mode != oldValue {
+                handleModeChange(to: mode)
+            }
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupSlider(slider)
+        setupMapView(mapView)
+        setupLocateButton(locateButton)
+        setupEditButton(editButton)
     }
     
-    // MARKER: map related
-    @IBOutlet weak var mapView: MAMapView! {
-        didSet {
-            AMapServices.shared().enableHTTPS = true
-            mapView.userTrackingMode = .follow
-            mapView.showsCompass = false
-            mapView.showsScale = false
-            mapView.delegate = self
-            mapView.desiredAccuracy = 10
-//            mapView.isScrollEnabled = false
-            mapView.isZoomEnabled = false
-            mapView.isRotateCameraEnabled = false
-            
-            // 自定义地图样式
-            if let path = Bundle.main.path(forResource: "AmapStyle", ofType: "bundle"), let mapStyleBundle = Bundle.init(path: path), let dataPath = mapStyleBundle.path(forResource: "style", ofType: "data"), let extraPath = mapStyleBundle.path(forResource: "style_extra", ofType: "data") {
-                let styleOption = MAMapCustomStyleOptions.init()
-                let dataUrl = URL(fileURLWithPath: dataPath)
-                assert (try! dataUrl.checkResourceIsReachable())
-                let extraUrl = URL(fileURLWithPath: extraPath)
-                styleOption.styleData = try? Data(contentsOf: dataUrl)
-                styleOption.styleExtraData = try? Data(contentsOf: extraUrl)
-                mapView.setCustomMapStyleOptions(styleOption)
-                mapView.customMapStyleEnabled = true
-            }
-            
-            let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
-            pan.delegate = self
-            mapView.addGestureRecognizer(pan)
-            
-            let r = MAUserLocationRepresentation()
-            r.showsAccuracyRing = false
-            mapView.update(r)
-        }
+    private var searchRadiusInPixels: CGFloat {
+        let zoom = mapView.zoomLevel
+        // TODO: 复杂计算可以用缓存
+        // ref: https://zhuanlan.zhihu.com/p/33285173
+        let scalePerPixel = 0.2531 * pow(2, (19 - zoom))
+        return CGFloat(searchRadius) / scalePerPixel
     }
     
-    @objc func pan(_ gr: UIPanGestureRecognizer) {
-        switch gr.state {
-        case .began: break
-        case .changed: moveCircle(to: mapView.center);
-        case .ended, .cancelled: break
-        default: break
-        }
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-    
-    func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
-        isCircleMoving = false
-    }
-    
-    private var radiusStep = 100.0
-    private var searchRadius: Double = 200 {// unit:m
-        didSet { setMapZoomLevel() }
-    }
-    
-    private var zoomLevels: [Int: Double] = {
-        var zoomLevels = [Int: Double]()
-        for x in stride(from: 100, to: 2000, by: 100) {
-            let dx = 1/Double(x)
-            let subexp1 = 1.787e+07 * dx - 3.298e+05
-            let subexp2 = subexp1 * dx + 2001
-            zoomLevels[x] = subexp2 * dx + 12.4
-        }
-        return zoomLevels
-    }()
-    
-    private func setMapZoomLevel() {
-        if let level = zoomLevels[Int(searchRadius/radiusStep) * 100] {
-            mapView.setZoomLevel(CGFloat(level), animated: true)
-        }
-    }
-    
-    @IBAction func seach(_ sender: Any) {
-        searchNearbyRestaurants()
-    }
-    
-    private var fixedCircle: MAOverlay?
-    private var isCircleMoving: Bool = false {
-        didSet {
-            if oldValue != self.isCircleMoving {
-                if self.isCircleMoving == false {
-                    fixedCircle = MACircle(center: mapView.centerCoordinate, radius: searchRadius)
-                    mapView.add(fixedCircle)
-                    mapView.removeAnnotations(annotations)
-                } else {
-                    mapView.remove(fixedCircle)
-                }
+    private func handleModeChange(to mode: MapViewMode) {
+        switch mode {
+        case .normal:
+            expandButtonView.expand = false
+            editModeBannerView.isHidden = true
+            editingCircle.isHidden = true
+            searchCircle = MACircle(center: mapView.centerCoordinate, radius: searchRadius)
+        case .edit:
+            if searchCircle != nil {
+                expandButtonView.expand = true
+                editModeBannerView.isHidden = false
+                mapView.setCenter(searchCircle!.coordinate, animated: true)
+                let radius = searchRadiusInPixels
+                let rect = CGRect(origin: mapView.frame.center.offset(dx: -radius, dy: -radius), size: CGSize(width: radius * 2, height: radius * 2))
+                editingCircle.frame = rect
+                editingCircle.cornerRadius = radius
+                editingCircle.isHidden = false
+                searchCircle = nil
             }
         }
     }
-    lazy private var movingCircle = { () -> CALayer in
-        let movingCircle = CALayer()
-        //        movingCircle.backgroundColor = MapViewController.searchCircleFillColor.cgColor
-        movingCircle.backgroundColor = MapViewController.searchCircleFillColor.cgColor
-        movingCircle.borderColor = MapViewController.searchCircleStrokeColor.cgColor
-        movingCircle.borderWidth = MapViewController.searchCircleStrokeLineWidth / 2
-        view.layer.addSublayer(movingCircle)
-        return movingCircle
-    }()
-    
-    func moveCircle(to center: CGPoint) {
-        isCircleMoving = true
-        let radius =  CGFloat(slider.value) / CGFloat(mapView.metersPerPointForCurrentZoom)//mapView.metersPerPointForCurrentZoomLevel
-        movingCircle.cornerRadius = radius
-        movingCircle.frame = CGRect(origin: center.offset(dx: -radius, dy: -radius), size: CGSize.init(width: radius*2, height: radius*2))
-        movingCircle.isHidden = false
+    @IBAction func cancelEditMode(_ sender: Any) {
+    }
+    @IBAction func confirmEditMode(_ sender: Any) {
+        mode = .normal
     }
     
+    private func setupMapView(_ mapView: MAMapView) {
+        AMapServices.shared().enableHTTPS = true
+        mapView.userTrackingMode = .follow
+        mapView.showsCompass = false
+        mapView.showsScale = false
+        mapView.delegate = self
+        mapView.desiredAccuracy = 10
+        mapView.isScrollEnabled = true
+        mapView.isZoomEnabled = true
+        mapView.isRotateCameraEnabled = false
+        
+        // 自定义地图样式
+        if let path = Bundle.main.path(forResource: "AmapStyle", ofType: "bundle"), let mapStyleBundle = Bundle.init(path: path), let dataPath = mapStyleBundle.path(forResource: "style", ofType: "data"), let extraPath = mapStyleBundle.path(forResource: "style_extra", ofType: "data") {
+            let styleOption = MAMapCustomStyleOptions.init()
+            let dataUrl = URL(fileURLWithPath: dataPath)
+            assert (try! dataUrl.checkResourceIsReachable())
+            let extraUrl = URL(fileURLWithPath: extraPath)
+            styleOption.styleData = try? Data(contentsOf: dataUrl)
+            styleOption.styleExtraData = try? Data(contentsOf: extraUrl)
+            mapView.setCustomMapStyleOptions(styleOption)
+            mapView.customMapStyleEnabled = true
+        }
+        
+        let r = MAUserLocationRepresentation()
+        r.showsAccuracyRing = false
+        mapView.update(r)
+    }
+    
+    private func setupSlider(_ slider: UISlider) {
+        let slider = UISlider()
+        slider.thumbTintColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        slider.minimumTrackTintColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        slider.minimumValue = 100
+        slider.maximumValue = 2000
+        slider.value = Float(searchRadius)
+        expandButtonView.slider = slider
+        slider.addTarget(self, action: #selector(changeSearchRadius(_:)), for: .valueChanged)
+    }
+    
+    private func setupLocateButton(_ button: UIButton) {
+        expandButtonView.upperButton = button
+        button.setTitle("L", for: .normal)
+        button.setTitleColor(#colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), for: .normal)
+        button.addTarget(self, action: #selector(locate(_:)), for: .touchUpInside)
+    }
+    @objc private func locate(_ sender: Any) {
+        print("click locate button")
+    }
+    
+    private func setupEditButton(_ button: UIButton) {
+        expandButtonView.lowerButton = button
+        button.setTitle("E", for: .normal)
+        button.setTitleColor(#colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), for: .normal)
+        button.addTarget(self, action: #selector(edit(_:)), for: .touchUpInside)
+    }
+    @objc private func edit(_ sender: Any) {
+        print("click edit button")
+        mode = .edit
+    }
+    
+    // MARKER: Mapview Delegate
     func mapView(_ mapView: MAMapView!, rendererFor overlay: MAOverlay!) -> MAOverlayRenderer! {
         if overlay.isKind(of: MACircle.self) {
             let renderer: MACircleRenderer = MACircleRenderer(overlay: overlay)
@@ -141,31 +171,21 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
         return nil
     }
     
-    func mapView(_ mapView: MAMapView!, didAddOverlayRenderers renderers: [Any]!) {
-        if let renderer = renderers.first, (renderer as AnyObject).isKind(of: MACircleRenderer.self) {
-            self.movingCircle.isHidden = true
-        }
-    }
-    
-    
-    private var isFirstUpdate = true
+    private var firstUpdateLocation = true
     func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
-        if isFirstUpdate {
-            isCircleMoving = false
-            searchNearbyRestaurants()
-            isFirstUpdate = false
+        print("update location")
+        //TODO： 确保初始化后只更新一次，后面手动更新位置
+        mapView.userTrackingMode = .none
+        if firstUpdateLocation  {
+            searchCircle = MACircle(center: userLocation!.location.coordinate, radius: searchRadius)
+            firstUpdateLocation = false
         }
     }
 
-    private var annotations = [MAAnnotation]()
-    
     // MARK: POI
     private var poiSearch = AMapSearchAPI()
     
     private func searchNearbyRestaurants(page: Int = 0) {
-        if page == 0 {
-            annotations.removeAll()
-        }
         print("request page#\(page)")
         let request = AMapPOIAroundSearchRequest()
         let coordinate = mapView.centerCoordinate
@@ -192,78 +212,30 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
                     p.coordinate = CLLocationCoordinate2DMake(CLLocationDegrees(latitude), CLLocationDegrees(longitude))
                     p.title = $0.name
                     p.subtitle = $0.address
-//                    print("{\n\tname: \($0.name), \n\ttel: \($0.tel), \n\taddress:\($0.address), \n\timages: \($0.images), \n\taverage-cost: \($0.extensionInfo.cost), \n\trating:\($0.extensionInfo.rating), \n\topenTime:\($0.extensionInfo.openTime), \n\ttype: \($0.type)\n}")
-                    annotations.append(p)
+//                    annotations.append(p)
                 }
             }
-            print("annotations count:\(annotations.count)")
-            if annotations.count < response.count {
-                searchNearbyRestaurants(page: annotations.count / 50)
-            } else {
-                mapView.addAnnotations(annotations)
-            }
         }
-    }
-    
-    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
-        if annotation.isKind(of: MAPointAnnotation.self) {
-            let pointReuseIndetifier = "pointReuseIndetifier"
-            var annotationView: MAPinAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: pointReuseIndetifier) as! MAPinAnnotationView?
-            
-            if annotationView == nil {
-                annotationView = MAPinAnnotationView(annotation: annotation, reuseIdentifier: pointReuseIndetifier)
-            }
-            
-            annotationView!.canShowCallout = true
-            annotationView!.animatesDrop = true
-            annotationView!.isDraggable = true
-            annotationView!.rightCalloutAccessoryView = UIButton(type: UIButton.ButtonType.detailDisclosure)
-            
-            return annotationView!
-        }
-        
-        return nil
-    }
-    
-    //MAKER: upper right widget
-    @IBOutlet weak var expandButtonView: ExpandButtonView!
-    lazy private var slider = makeSlider()
-    
-    private func makeSlider() -> UISlider {
-        let slider = UISlider()
-        slider.thumbTintColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-        slider.minimumTrackTintColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-        slider.minimumValue = 100
-        slider.maximumValue = 2000
-        slider.value = slider.minimumValue
-        expandButtonView.slider = slider
-        slider.addTarget(self, action: #selector(changeSearchRadius(_:)), for: .valueChanged)
-        slider.addTarget(self, action: #selector(didEndEditSearchRadius(_:)), for: .touchUpInside)
-        return slider
     }
     
     @objc private func changeSearchRadius(_ sender: Any) {
         if let slider = sender as? UISlider {
-            if Int(searchRadius / radiusStep) != Int(Double(slider.value) / radiusStep) {
-                searchRadius = Double(slider.value)
-            }
-            moveCircle(to: mapView.center)
-        }
-    }
-    
-    @objc private func didEndEditSearchRadius(_ sender: Any) {
-        if let slider = sender as? UISlider {
             searchRadius = Double(slider.value)
-            isCircleMoving = false
         }
     }
-    
 }
 
 extension MapViewController {
     static let searchCircleFillColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1).withAlphaComponent(0.4)
     static let searchCircleStrokeColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).withAlphaComponent(0.6)
     static let searchCircleStrokeLineWidth: CGFloat = 4.0
+    static let maxSearchRadius = 2000
+    static let minSearchRadius = 100
+    
+    enum MapViewMode {
+        case normal
+        case edit
+    }
     
 }
 
