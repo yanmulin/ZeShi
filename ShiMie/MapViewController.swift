@@ -8,15 +8,19 @@
 
 import UIKit
 
-// TODO: 手画定位点
-// TODO: 进入一次自动定位，后面手动定位
-// TODO: editingCircle位置计算错误
+// TODO: 手画定位点 ✅
+// TODO: 进入一次自动定位，后面手动定位 ✅
+// TODO: editingCircle位置计算错误 ✅
+// TODO: 添加进入Edit mode 动画
+// TODO: Edit mode下searchCircle不能触发scroll手势
 
 class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerDelegate, AMapSearchDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var mapView: MAMapView!
+    private var locationManager = AMapLocationManager()
     
     private var searchRadius: Double = 200
+    private var searchCenterPin = CustomedAnnotation(with: .searchCenter)
     private var searchCircle: MACircle? {
         didSet {
             if let oldValue = oldValue {
@@ -27,24 +31,34 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
             }
         }
     }
-    lazy private var editingCircle = { () -> CAShapeLayer in
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.backgroundColor = MapViewController.searchCircleFillColor.cgColor
-        shapeLayer.borderColor = MapViewController.searchCircleStrokeColor.cgColor
-        shapeLayer.borderWidth = MapViewController.searchCircleStrokeLineWidth
-        shapeLayer.isHidden = true
-        view.layer.addSublayer(shapeLayer)
-        return shapeLayer
+    lazy private var editingPin = { () -> UIView in
+        let pinView = UIImageView(image: self.searchCenterPin.type.image)
+        let view = UIView(frame: CGRect(origin: mapView.bounds.center.offset(dx: -pinView.bounds.width / 2, dy: -pinView.bounds.height), size: pinView.bounds.size))
+        view.addSubview(pinView)
+        view.addShadowSubview()
+        view.isHidden = true
+        mapView.addSubview(view)
+        return view
+    }()
+    lazy private var editingCircle = { () -> UIView in
+        let view = UIView()
+        view.backgroundColor = MapViewController.searchCircleFillColor
+        view.layer.borderColor = MapViewController.searchCircleStrokeColor.cgColor
+        view.layer.borderWidth = MapViewController.searchCircleStrokeLineWidth
+        view.layer.isHidden = true
+        mapView.addSubview(view)
+        return view
     }()
     
-    private var restaurantAnnotations = [MAAnnotation]()
+    private var userLocationPin = CustomedAnnotation(with: .user)
+    
+    private var restaurantPins = [MAAnnotation]()
     
     @IBOutlet weak var expandButtonView: ExpandButtonView!
     private var slider = UISlider()
     
     private var locateButton = UIButton()
     private var editButton = UIButton()
-    
     
     @IBOutlet weak var editModeBannerView: UIStackView!
     
@@ -62,13 +76,14 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
         setupMapView(mapView)
         setupLocateButton(locateButton)
         setupEditButton(editButton)
+        locate(in: kCLLocationAccuracyNearestTenMeters, updateSearchPin: true)
     }
     
     private var searchRadiusInPixels: CGFloat {
         let zoom = mapView.zoomLevel
         // TODO: 复杂计算可以用缓存
         // ref: https://zhuanlan.zhihu.com/p/33285173
-        let scalePerPixel = 0.2531 * pow(2, (19 - zoom))
+        let scalePerPixel = 0.325 * pow(2, (19 - zoom))
         return CGFloat(searchRadius) / scalePerPixel
     }
     
@@ -78,30 +93,38 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
             expandButtonView.expand = false
             editModeBannerView.isHidden = true
             editingCircle.isHidden = true
-            searchCircle = MACircle(center: mapView.centerCoordinate, radius: searchRadius)
+            searchCircle = MACircle(center: searchCenterPin.coordinate, radius: searchRadius)
+            mapView.setCenter(searchCenterPin.coordinate, animated: false)
+            
+            searchCenterPin.view?.isHidden = false
+            editingPin.isHidden = true
         case .edit:
             if searchCircle != nil {
                 expandButtonView.expand = true
                 editModeBannerView.isHidden = false
-                mapView.setCenter(searchCircle!.coordinate, animated: true)
+                mapView.setCenter(searchCircle!.coordinate, animated: false)
                 let radius = searchRadiusInPixels
-                let rect = CGRect(origin: mapView.frame.center.offset(dx: -radius, dy: -radius), size: CGSize(width: radius * 2, height: radius * 2))
+                let rect = CGRect(origin: mapView.bounds.center.offset(dx: -radius, dy: -radius), size: CGSize(width: radius * 2, height: radius * 2))
                 editingCircle.frame = rect
-                editingCircle.cornerRadius = radius
+                editingCircle.layer.cornerRadius = radius
                 editingCircle.isHidden = false
                 searchCircle = nil
+                searchCenterPin.view?.isHidden = true
+                editingPin.isHidden = false
             }
         }
     }
     @IBAction func cancelEditMode(_ sender: Any) {
+        mode = .normal
     }
     @IBAction func confirmEditMode(_ sender: Any) {
+        searchCenterPin.coordinate = mapView.centerCoordinate
         mode = .normal
     }
     
     private func setupMapView(_ mapView: MAMapView) {
         AMapServices.shared().enableHTTPS = true
-        mapView.userTrackingMode = .follow
+        mapView.userTrackingMode = .none
         mapView.showsCompass = false
         mapView.showsScale = false
         mapView.delegate = self
@@ -122,9 +145,7 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
             mapView.customMapStyleEnabled = true
         }
         
-        let r = MAUserLocationRepresentation()
-        r.showsAccuracyRing = false
-        mapView.update(r)
+        mapView.addAnnotations([searchCenterPin, userLocationPin])
     }
     
     private func setupSlider(_ slider: UISlider) {
@@ -170,17 +191,6 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
         }
         return nil
     }
-    
-    private var firstUpdateLocation = true
-    func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
-        print("update location")
-        //TODO： 确保初始化后只更新一次，后面手动更新位置
-        mapView.userTrackingMode = .none
-        if firstUpdateLocation  {
-            searchCircle = MACircle(center: userLocation!.location.coordinate, radius: searchRadius)
-            firstUpdateLocation = false
-        }
-    }
 
     // MARK: POI
     private var poiSearch = AMapSearchAPI()
@@ -223,12 +233,49 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
             searchRadius = Double(slider.value)
         }
     }
+    
+    private func locate(in accuracy: CLLocationAccuracy =  kCLLocationAccuracyNearestTenMeters, updateSearchPin: Bool = false) {
+        locationManager.desiredAccuracy = accuracy
+        locationManager.locationTimeout = 1
+        locationManager.locatingWithReGeocode = false
+        locationManager.requestLocation(withReGeocode: false) { [weak self] (location, _, error) in
+            if let error = error as NSError? {
+                print("\(error.localizedDescription)")
+                if error.code == AMapLocationErrorCode.locateFailed.rawValue {
+                    print("\(error.localizedDescription)")
+                } else {
+                    
+                }
+            } else if let location = location, let self = self {
+                self.userLocationPin.coordinate = location.coordinate
+                self.mapView.setCenter(location.coordinate, animated: false)
+                if updateSearchPin {
+                    self.searchCenterPin.coordinate = location.coordinate
+                    // TODO：重构
+                    if self.mode == .normal {
+                        self.searchCircle = MACircle(center: location.coordinate, radius: self.searchRadius)
+                    }
+                }
+            }
+        }
+    }
+    
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+        if let annotation = annotation as? CustomedAnnotation {
+            let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotation.type.identifier) ?? MAAnnotationView(annotation: annotation, reuseIdentifier: annotation.type.identifier)
+            view?.image = annotation.type.image
+            view?.centerOffset = annotation.type.centerOffset
+            annotation.view = view
+            return view
+        }
+        return nil
+    }
 }
 
 extension MapViewController {
     static let searchCircleFillColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1).withAlphaComponent(0.4)
     static let searchCircleStrokeColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).withAlphaComponent(0.6)
-    static let searchCircleStrokeLineWidth: CGFloat = 4.0
+    static let searchCircleStrokeLineWidth: CGFloat = 2.0
     static let maxSearchRadius = 2000
     static let minSearchRadius = 100
     
