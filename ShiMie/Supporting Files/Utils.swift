@@ -6,7 +6,7 @@
 //  Copyright © 2019 yanmulin. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 extension CGPoint {
     func offset(dx: CGFloat, dy: CGFloat) -> CGPoint {
@@ -35,5 +35,25 @@ extension CGRect {
     
     var rightBottom: CGPoint {
         return self.origin.offset(dx: self.width, dy: self.height)
+    }
+}
+
+extension UIView {
+    static let shadowViewTag = 112233
+    var shadowSubview: UIView? {
+        return subviews.first(where: { $0.tag == UIView.shadowViewTag }) ?? nil
+    }
+    func addShadowSubview() {
+        if let shadowView = shadowSubview {
+            shadowView.removeFromSuperview()
+        }
+        if let image = UIImage(named: "shadow") {
+            let shadowView = UIImageView(image: image)
+            shadowView.tag = UIView.shadowViewTag
+            addSubview(shadowView)
+            shadowView.sizeToFit()
+            shadowView.center = CGPoint(x: bounds.width / 2, y: bounds.height)
+            clipsToBounds = false
+        }
     }
 }
