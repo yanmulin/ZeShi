@@ -8,19 +8,19 @@
 
 import UIKit
 
-// TODO: 手画定位点 ✅
-// TODO: 进入一次自动定位，后面手动定位 ✅
+// ✅ TODO: 手画定位点
+// ✅ TODO: 进入一次自动定位，后面手动定位
+// ✅ TODO: searchCenterPin被userLocationPin覆盖
+// ✅ TODO: edit mode下无法跟随惯性滑动
+// ✅ TODO: edit mode 缩放手势
+// ✅ TODO: edit mode slider调整radius
+// ✅ TODO：location manager 单例
 // TODO: 添加进入Edit mode 动画
-// TODO: searchCenterPin被userLocationPin覆盖 ✅
-// TODO: edit mode下无法跟随惯性滑动 ✅
-// TODO: edit mode 适配缩放手势
-// TODO：location manager 单例
 // TODO: MapView 类
 
 class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerDelegate, AMapSearchDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var mapView: MAMapView!
-    private var locationManager = AMapLocationManager()
     
     private var userLocationPin = CustomedAnnotation(with: .user)
     private var searchCenterPin = CustomedAnnotation(with: .searchCenter)
@@ -44,12 +44,21 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupSlider(slider)
         setupMapView(mapView)
+        setupSlider(slider)
         setupLocateButton(locateButton)
         setupEditButton(editButton)
-        locate(in: kCLLocationAccuracyNearestTenMeters, updateSearchPin: true)
-        mapView.setZoomLevel(16.5, animated: true)
+        LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters) { [weak self] (location) in
+            self?.mapView.setCenter(location.coordinate, animated: true)
+            self?.searchCircle.coordinate = location.coordinate
+            self?.searchCenterPin.coordinate = location.coordinate
+            self?.userLocationPin.coordinate = location.coordinate
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        mapView.selectAnnotation(searchCenterPin, animated: false)
     }
     
     private var searchRadiusInPixels: CGFloat {
@@ -71,6 +80,13 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
         case .edit:
             expandButtonView.expand = true
             editModeBannerView.isHidden = false
+            
+            // reset radius
+            let circleEdgePoint = mapView.convert(mapView.center.offset(dx: mapView.bounds.width * 0.8 * 0.5, dy: 0), toCoordinateFrom: mapView)
+            let point1 = MAMapPointForCoordinate(circleEdgePoint)
+            let point2 = MAMapPointForCoordinate(mapView.centerCoordinate)
+            let radius = MAMetersBetweenMapPoints(point1, point2)
+            searchCircle.radius = max(min(radius, CLLocationDistance(MapViewController.maxSearchRadius)), CLLocationDistance(MapViewController.minSearchRadius))
         }
         mapView.setCenter(searchCircle.coordinate, animated: false)
     }
@@ -90,6 +106,9 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
         mapView.isScrollEnabled = true
         mapView.isZoomEnabled = true
         mapView.isRotateCameraEnabled = false
+        mapView.minZoomLevel = 13.5
+        mapView.maxZoomLevel = 17.2
+        mapView.setZoomLevel(16.5, animated: true)
         
         // 自定义地图样式
         if let path = Bundle.main.path(forResource: "AmapStyle", ofType: "bundle"), let mapStyleBundle = Bundle.init(path: path), let dataPath = mapStyleBundle.path(forResource: "style", ofType: "data"), let extraPath = mapStyleBundle.path(forResource: "style_extra", ofType: "data") {
@@ -108,14 +127,22 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
     }
     
     private func setupSlider(_ slider: UISlider) {
-        let slider = UISlider()
         slider.thumbTintColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
         slider.minimumTrackTintColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-        slider.minimumValue = 200
-        slider.maximumValue = 2000
-        slider.value = Float(searchCircle.radius)
+        slider.minimumValue = 13.5
+        slider.maximumValue = 17.2
+        slider.value = Float(mapView.zoomLevel)
         expandButtonView.slider = slider
-        slider.addTarget(self, action: #selector(changeSearchRadius(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(sliderValueChange(_:)), for: .valueChanged)
+    }
+    
+    @objc private func sliderValueChange(_ sender: Any) {
+        if let slider = sender as? UISlider {
+            if abs(mapView.zoomLevel - CGFloat(slider.value)) > 0.01 {
+                zoomLevelRecord = mapView.zoomLevel
+                mapView.setZoomLevel(CGFloat(slider.value), animated: true)
+            }
+        }
     }
     
     private func setupLocateButton(_ button: UIButton) {
@@ -126,6 +153,31 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
     }
     @objc private func locate(_ sender: Any) {
         print("click locate button")
+        if mode == .edit {
+            if let location = LocationManager.shared.lastLocation {
+                mapView.setCenter(location.coordinate, animated: true)
+                searchCircle.coordinate = location.coordinate
+                searchCenterPin.coordinate = location.coordinate
+                LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters)
+            } else {
+                LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters) { [weak self] (location) in
+                    self?.mapView.setCenter(location.coordinate, animated: true)
+                    self?.searchCircle.coordinate = location.coordinate
+                    self?.searchCenterPin.coordinate = location.coordinate
+                    self?.userLocationPin.coordinate = location.coordinate
+                }
+            }
+        } else {
+            if let location = LocationManager.shared.lastLocation {
+                mapView.setCenter(location.coordinate, animated: false)
+                LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters)
+            } else {
+                LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters) { [weak self] (location) in
+                    self?.mapView.setCenter(location.coordinate, animated: true)
+                    self?.userLocationPin.coordinate = location.coordinate
+                }
+            }
+        }
     }
     
     private func setupEditButton(_ button: UIButton) {
@@ -140,48 +192,32 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
     }
     
     // MARKER: Mapview Delegate
-    func mapView(_ mapView: MAMapView!, regionWillChangeAnimated animated: Bool) {
-        if mode == .edit {
-            zoomLevelRecord = mapView.zoomLevel
-        }
-    }
     func mapViewRegionChanged(_ mapView: MAMapView!) {
         if mode == .edit {
             searchCircle.coordinate = mapView.centerCoordinate
             searchCenterPin.coordinate = mapView.centerCoordinate
             
             let deltaZoom = zoomLevelRecord - mapView.zoomLevel
-            if abs(deltaZoom) > 0.01 {
-                zoomLevelRecord = mapView.zoomLevel
-                if mapView.zoomLevel <= 13.68 {
-                    searchCircle.radius = 2000
-                } else if mapView.zoomLevel >= 17 {
-                    searchCircle.radius = 200
-                } else {
-//                    let circleRect = mapView.convertRegion(MACoordinateRegionForMapRect(searchCircle.boundingMapRect), toRectTo: mapView)
-                    
-//                    let newCircleDiameter = circleRect.width * pow(2.0, deltaZoom)
-                    
-//                    if newCircleDiameter < mapView.bounds.width * 0.1 || newCircleDiameter > mapView.bounds.width * 0.9 {
-//                        let circleEdgePoint = mapView.convert(mapView.center.offset(dx: mapView.bounds.width * 0.67 * 0.5, dy: 0), toCoordinateFrom: mapView)
-//                        let point1 = MAMapPointForCoordinate(circleEdgePoint)
-//                        let point2 = MAMapPointForCoordinate(mapView.centerCoordinate)
-//                        let radius = MAMetersBetweenMapPoints(point1, point2)
-//                        searchCircle.radius = radius
-//                        print("reset circle")
-//                    } else {
-                        searchCircle.radius = searchCircle.radius * Double(pow(2.0, deltaZoom))
-                        print("scale circle")
-//                    }
-                }
-                print("zoomLevel: \(mapView.zoomLevel), radius: \(searchCircle.radius)")
+            zoomLevelRecord = mapView.zoomLevel
+            if mapView.zoomLevel <= 13.68 {
+                searchCircle.radius = 2000
+            } else if mapView.zoomLevel >= 17 {
+                searchCircle.radius = 200
+            } else if abs(deltaZoom) > 0.01 {
+                searchCircle.radius = searchCircle.radius * Double(pow(2.0, deltaZoom))
+                print("scale circle")
             }
+            print("zoomLevel: \(mapView.zoomLevel), radius: \(searchCircle.radius)")
+            slider.value = Float(mapView.zoomLevel)
         }
     }
     
     private var searchRadiusRecord: Double = 0
     private var zoomLevelRecord: CGFloat = 0
     func mapView(_ mapView: MAMapView!, mapWillZoomByUser wasUserAction: Bool) {
+        if mode == .edit && wasUserAction {
+            zoomLevelRecord = mapView.zoomLevel
+        }
     }
     
     func mapView(_ mapView: MAMapView!, mapDidZoomByUser wasUserAction: Bool) {
@@ -234,42 +270,12 @@ class MapViewController: UIViewController, MAMapViewDelegate, CLLocationManagerD
         }
     }
     
-    @objc private func changeSearchRadius(_ sender: Any) {
-        if let slider = sender as? UISlider {
-            searchCircle.radius = Double(slider.value)
-        }
-    }
-    
-    private func locate(in accuracy: CLLocationAccuracy =  kCLLocationAccuracyNearestTenMeters, updateSearchPin: Bool = false) {
-        locationManager.desiredAccuracy = accuracy
-        locationManager.locationTimeout = 1
-        locationManager.locatingWithReGeocode = false
-        locationManager.requestLocation(withReGeocode: false) { [weak self] (location, _, error) in
-            if let error = error as NSError? {
-                print("\(error.localizedDescription)")
-                if error.code == AMapLocationErrorCode.locateFailed.rawValue {
-                    print("\(error.localizedDescription)")
-                } else {
-                    
-                }
-            } else if let coordinate = location?.coordinate, let self = self {
-                self.userLocationPin.coordinate = coordinate
-                self.mapView.setCenter(coordinate, animated: false)
-                if updateSearchPin {
-                    self.searchCenterPin.coordinate = coordinate
-                    self.searchCircle.coordinate = coordinate
-                }
-            }
-        }
-    }
-    
     func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
         if let annotation = annotation as? CustomedAnnotation {
             let view = mapView.dequeueReusableAnnotationView(withIdentifier: annotation.type.identifier) ?? MAAnnotationView(annotation: annotation, reuseIdentifier: annotation.type.identifier)
             view?.image = annotation.type.image
             view?.centerOffset = annotation.type.centerOffset
             annotation.view = view
-            mapView.selectAnnotation(searchCenterPin, animated: false)
             return view
         }
         return nil

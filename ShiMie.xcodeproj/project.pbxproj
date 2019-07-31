@@ -10,6 +10,7 @@
 		17109D6722DE275C00CA0198 /* AmapStyle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 17109D6622DE275C00CA0198 /* AmapStyle.bundle */; };
 		172B5A6E22EF07DA00BFB2BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */; };
 		175F4BEB22F0C37E00C3A007 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175F4BEA22F0C37E00C3A007 /* MapView.swift */; };
+		175F4BEF22F16F1600C3A007 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175F4BEE22F16F1600C3A007 /* LocationManager.swift */; };
 		17873BE022F01B52002DBC5E /* CustomedAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */; };
 		179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CD22D832DA0085BE33 /* CardListView.swift */; };
 		179EF1D022DA2E860085BE33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CF22DA2E860085BE33 /* Utils.swift */; };
@@ -29,6 +30,7 @@
 		17109D6622DE275C00CA0198 /* AmapStyle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AmapStyle.bundle; sourceTree = "<group>"; };
 		172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		175F4BEA22F0C37E00C3A007 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		175F4BEE22F16F1600C3A007 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomedAnnotation.swift; sourceTree = "<group>"; };
 		179EF1CD22D832DA0085BE33 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 		179EF1CF22DA2E860085BE33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		17EDBF0C22D07B9D004689AB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				175F4BEE22F16F1600C3A007 /* LocationManager.swift */,
 				17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */,
 				172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */,
 				17EDBF1022D08970004689AB /* bridging.h */,
@@ -259,6 +262,7 @@
 				17EDBF1A22D0BF52004689AB /* RestaurantCardView.swift in Sources */,
 				175F4BEB22F0C37E00C3A007 /* MapView.swift in Sources */,
 				179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */,
+				175F4BEF22F16F1600C3A007 /* LocationManager.swift in Sources */,
 				17EDBED722D079FA004689AB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
