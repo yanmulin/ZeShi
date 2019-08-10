@@ -11,7 +11,14 @@ import Foundation
 class LocationManager {
     static let shared = LocationManager()
     
-    var lastLocation: CLLocation?
+    var lastLocation: CLLocationCoordinate2D? {
+        didSet {
+            if lastLocation != nil {
+                UserDefaults.standard.set(lastLocation?.latitude, forKey: "userLocationLatitude")
+                UserDefaults.standard.set(lastLocation?.longitude, forKey: "userLocationLongitude")
+            }
+        }
+    }
     
     func locate(at accuracy: CLLocationAccuracy, with completion: ((_ location: CLLocation) -> Void)? = nil) {
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
@@ -26,7 +33,7 @@ class LocationManager {
                     
                 }
             } else if let location = location {
-                self?.lastLocation = location
+                self?.lastLocation = location.coordinate
                 completion?(location)
             }
         }
@@ -34,5 +41,9 @@ class LocationManager {
     
     private var locationManager = AMapLocationManager()
     
-    private init() {}
+    private init() {
+        let lat = UserDefaults.standard.double(forKey: "userLocaitonLatitude")
+        let lng = UserDefaults.standard.double(forKey: "userLocaitonLongitude")
+        lastLocation = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+    }
 }

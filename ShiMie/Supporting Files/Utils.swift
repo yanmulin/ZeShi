@@ -36,6 +36,16 @@ extension CGRect {
     var rightBottom: CGPoint {
         return self.origin.offset(dx: self.width, dy: self.height)
     }
+    
+    var rightTop: CGPoint {
+        return self.origin.offset(dx: width, dy: 0)
+    }
+    
+    func scale(by factor: CGFloat) -> CGRect {
+        let newWidth = width * factor
+        let newHeight = height * factor
+        return CGRect(x: minX + (width - newWidth) / 2, y: minY + (height - newHeight) / 2, width: newWidth, height: newHeight)
+    }
 }
 
 extension UIView {
@@ -43,17 +53,58 @@ extension UIView {
     var shadowSubview: UIView? {
         return subviews.first(where: { $0.tag == UIView.shadowViewTag }) ?? nil
     }
-    func addShadowSubview() {
+    func addShadowSubview(at center: CGPoint) {
         if let shadowView = shadowSubview {
             shadowView.removeFromSuperview()
         }
         if let image = UIImage(named: "shadow") {
             let shadowView = UIImageView(image: image)
             shadowView.tag = UIView.shadowViewTag
-            addSubview(shadowView)
+            insertSubview(shadowView, at: 0)
             shadowView.sizeToFit()
-            shadowView.center = CGPoint(x: bounds.width / 2, y: bounds.height)
+            shadowView.frame = shadowView.frame.scale(by: bounds.width / shadowView.bounds.width)
+            shadowView.center = center
             clipsToBounds = false
+        }
+    }
+}
+
+extension Int {
+    var arc4random: Int {
+        return Int(arc4random_uniform(UInt32(self)))
+    }
+}
+
+extension CLLocationCoordinate2D {
+    init(with point: AMapGeoPoint?) {
+        if let latitude = point?.latitude, let longitude = point?.longitude {
+            self.init()
+            self.latitude = CLLocationDegrees(latitude)
+            self.longitude = CLLocationDegrees(longitude)
+        } else {
+            self = kCLLocationCoordinate2DInvalid
+        }
+    }
+}
+
+extension BoundingBox {
+    init(with mapRect: MAMapRect) {
+        let region = MACoordinateRegionForMapRect(mapRect)
+        self = BoundingBoxMake(
+            region.center.latitude - region.span.latitudeDelta / 2,
+            region.center.longitude - region.span.longitudeDelta / 2,
+            region.center.latitude + region.span.latitudeDelta / 2,
+            region.center.longitude + region.span.longitudeDelta / 2
+        )
+    }
+}
+
+extension UIViewController {
+    var contentVC: UIViewController? {
+        if let nvc = self as? UINavigationController {
+            return nvc.topViewController ?? nil
+        } else {
+            return self
         }
     }
 }

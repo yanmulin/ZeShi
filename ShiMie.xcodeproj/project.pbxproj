@@ -15,6 +15,22 @@
 		179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CD22D832DA0085BE33 /* CardListView.swift */; };
 		179EF1D022DA2E860085BE33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CF22DA2E860085BE33 /* Utils.swift */; };
 		179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */; };
+		179FC85322F93393005AF7CB /* POISearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC85222F93393005AF7CB /* POISearchManager.swift */; };
+		179FC85522F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC85422F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift */; };
+		179FC88522F96391005AF7CB /* ClusterAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88022F96391005AF7CB /* ClusterAnnotation.m */; };
+		179FC88622F96391005AF7CB /* CoordinateQuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88122F96391005AF7CB /* CoordinateQuadTree.m */; };
+		179FC88722F96391005AF7CB /* QuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88322F96391005AF7CB /* QuadTree.m */; };
+		179FC88822F963A9005AF7CB /* ClusterAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87322F962CE005AF7CB /* ClusterAnnotationView.m */; };
+		179FC88922F963A9005AF7CB /* ClusterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87522F962CE005AF7CB /* ClusterTableViewCell.m */; };
+		179FC88A22F963A9005AF7CB /* CustomCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87822F962CE005AF7CB /* CustomCalloutView.m */; };
+		179FC88B22F963B2005AF7CB /* ClusterAnnotation.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87F22F96391005AF7CB /* ClusterAnnotation.h */; };
+		179FC88C22F963B2005AF7CB /* CoordinateQuadTree.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88422F96391005AF7CB /* CoordinateQuadTree.h */; };
+		179FC88D22F963B2005AF7CB /* QuadTree.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88222F96391005AF7CB /* QuadTree.h */; };
+		179FC88E22F963B7005AF7CB /* ClusterTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87622F962CE005AF7CB /* ClusterTableViewCell.h */; };
+		179FC88F22F963B7005AF7CB /* CustomCalloutView.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87422F962CE005AF7CB /* CustomCalloutView.h */; };
+		179FC89022F963B7005AF7CB /* ClusterAnnotationView.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87722F962CE005AF7CB /* ClusterAnnotationView.h */; };
+		179FC89222FBC1B0005AF7CB /* RestaurantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC89122FBC1B0005AF7CB /* RestaurantDetailViewController.swift */; };
+		179FC89422FBFF45005AF7CB /* WavesTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC89322FBFF45005AF7CB /* WavesTransition.swift */; };
 		17EDBED722D079FA004689AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBED622D079FA004689AB /* AppDelegate.swift */; };
 		17EDBED922D079FA004689AB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBED822D079FA004689AB /* MapViewController.swift */; };
 		17EDBEDC22D079FA004689AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBEDA22D079FA004689AB /* Main.storyboard */; };
@@ -35,6 +51,22 @@
 		179EF1CD22D832DA0085BE33 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 		179EF1CF22DA2E860085BE33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandButtonView.swift; sourceTree = "<group>"; };
+		179FC85222F93393005AF7CB /* POISearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISearchManager.swift; sourceTree = "<group>"; };
+		179FC85422F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomedPOIAroundSearchRequest.swift; sourceTree = "<group>"; };
+		179FC87322F962CE005AF7CB /* ClusterAnnotationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClusterAnnotationView.m; sourceTree = "<group>"; };
+		179FC87422F962CE005AF7CB /* CustomCalloutView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomCalloutView.h; sourceTree = "<group>"; };
+		179FC87522F962CE005AF7CB /* ClusterTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClusterTableViewCell.m; sourceTree = "<group>"; };
+		179FC87622F962CE005AF7CB /* ClusterTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClusterTableViewCell.h; sourceTree = "<group>"; };
+		179FC87722F962CE005AF7CB /* ClusterAnnotationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClusterAnnotationView.h; sourceTree = "<group>"; };
+		179FC87822F962CE005AF7CB /* CustomCalloutView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomCalloutView.m; sourceTree = "<group>"; };
+		179FC87F22F96391005AF7CB /* ClusterAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClusterAnnotation.h; sourceTree = "<group>"; };
+		179FC88022F96391005AF7CB /* ClusterAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClusterAnnotation.m; sourceTree = "<group>"; };
+		179FC88122F96391005AF7CB /* CoordinateQuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinateQuadTree.m; sourceTree = "<group>"; };
+		179FC88222F96391005AF7CB /* QuadTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuadTree.h; sourceTree = "<group>"; };
+		179FC88322F96391005AF7CB /* QuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuadTree.m; sourceTree = "<group>"; };
+		179FC88422F96391005AF7CB /* CoordinateQuadTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinateQuadTree.h; sourceTree = "<group>"; };
+		179FC89122FBC1B0005AF7CB /* RestaurantDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantDetailViewController.swift; sourceTree = "<group>"; };
+		179FC89322FBFF45005AF7CB /* WavesTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavesTransition.swift; sourceTree = "<group>"; };
 		17EDBED322D079FA004689AB /* ShiMie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShiMie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17EDBED622D079FA004689AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17EDBED822D079FA004689AB /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -63,6 +95,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		179FC86A22F962B7005AF7CB /* ClusterAnnotations */ = {
+			isa = PBXGroup;
+			children = (
+				179FC86B22F962B7005AF7CB /* Model */,
+				179FC86C22F962B7005AF7CB /* View */,
+			);
+			path = ClusterAnnotations;
+			sourceTree = "<group>";
+		};
+		179FC86B22F962B7005AF7CB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				179FC87F22F96391005AF7CB /* ClusterAnnotation.h */,
+				179FC88022F96391005AF7CB /* ClusterAnnotation.m */,
+				179FC88422F96391005AF7CB /* CoordinateQuadTree.h */,
+				179FC88122F96391005AF7CB /* CoordinateQuadTree.m */,
+				179FC88222F96391005AF7CB /* QuadTree.h */,
+				179FC88322F96391005AF7CB /* QuadTree.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		179FC86C22F962B7005AF7CB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				179FC87622F962CE005AF7CB /* ClusterTableViewCell.h */,
+				179FC87422F962CE005AF7CB /* CustomCalloutView.h */,
+				179FC87322F962CE005AF7CB /* ClusterAnnotationView.m */,
+				179FC87522F962CE005AF7CB /* ClusterTableViewCell.m */,
+				179FC87822F962CE005AF7CB /* CustomCalloutView.m */,
+				179FC87722F962CE005AF7CB /* ClusterAnnotationView.h */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		17EDBECA22D079FA004689AB = {
 			isa = PBXGroup;
 			children = (
@@ -86,15 +153,19 @@
 		17EDBED522D079FA004689AB /* ShiMie */ = {
 			isa = PBXGroup;
 			children = (
+				179FC89322FBFF45005AF7CB /* WavesTransition.swift */,
 				175F4BEA22F0C37E00C3A007 /* MapView.swift */,
 				179EF1CD22D832DA0085BE33 /* CardListView.swift */,
+				179FC85222F93393005AF7CB /* POISearchManager.swift */,
 				17EDBF1922D0BF52004689AB /* RestaurantCardView.swift */,
-				17EDBF0C22D07B9D004689AB /* Supporting Files */,
+				179FC89122FBC1B0005AF7CB /* RestaurantDetailViewController.swift */,
 				17EDBED822D079FA004689AB /* MapViewController.swift */,
 				179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */,
 				17EDBF1322D0AB4B004689AB /* CardListViewController.swift */,
 				17EDBF1522D0AC27004689AB /* Restaurant.swift */,
 				17EDBEE222D079FB004689AB /* Info.plist */,
+				17EDBF0C22D07B9D004689AB /* Supporting Files */,
+				179FC86A22F962B7005AF7CB /* ClusterAnnotations */,
 			);
 			path = ShiMie;
 			sourceTree = "<group>";
@@ -103,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				175F4BEE22F16F1600C3A007 /* LocationManager.swift */,
+				179FC85422F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift */,
 				17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */,
 				172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */,
 				17EDBF1022D08970004689AB /* bridging.h */,
@@ -253,17 +325,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				179FC88E22F963B7005AF7CB /* ClusterTableViewCell.h in Sources */,
+				179FC88F22F963B7005AF7CB /* CustomCalloutView.h in Sources */,
+				179FC89022F963B7005AF7CB /* ClusterAnnotationView.h in Sources */,
+				179FC88B22F963B2005AF7CB /* ClusterAnnotation.h in Sources */,
+				179FC88C22F963B2005AF7CB /* CoordinateQuadTree.h in Sources */,
+				179FC88D22F963B2005AF7CB /* QuadTree.h in Sources */,
+				179FC88822F963A9005AF7CB /* ClusterAnnotationView.m in Sources */,
+				179FC88922F963A9005AF7CB /* ClusterTableViewCell.m in Sources */,
+				179FC88A22F963A9005AF7CB /* CustomCalloutView.m in Sources */,
+				179FC88522F96391005AF7CB /* ClusterAnnotation.m in Sources */,
 				179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */,
+				179FC88722F96391005AF7CB /* QuadTree.m in Sources */,
+				179FC88622F96391005AF7CB /* CoordinateQuadTree.m in Sources */,
 				17EDBF1622D0AC27004689AB /* Restaurant.swift in Sources */,
 				17EDBF1422D0AB4B004689AB /* CardListViewController.swift in Sources */,
 				17EDBED922D079FA004689AB /* MapViewController.swift in Sources */,
 				179EF1D022DA2E860085BE33 /* Utils.swift in Sources */,
+				179FC89222FBC1B0005AF7CB /* RestaurantDetailViewController.swift in Sources */,
 				17873BE022F01B52002DBC5E /* CustomedAnnotation.swift in Sources */,
 				17EDBF1A22D0BF52004689AB /* RestaurantCardView.swift in Sources */,
+				179FC85322F93393005AF7CB /* POISearchManager.swift in Sources */,
+				179FC89422FBFF45005AF7CB /* WavesTransition.swift in Sources */,
 				175F4BEB22F0C37E00C3A007 /* MapView.swift in Sources */,
 				179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */,
 				175F4BEF22F16F1600C3A007 /* LocationManager.swift in Sources */,
 				17EDBED722D079FA004689AB /* AppDelegate.swift in Sources */,
+				179FC85522F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

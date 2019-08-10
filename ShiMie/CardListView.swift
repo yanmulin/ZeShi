@@ -18,6 +18,8 @@ protocol CardListViewDataSource: class {
 
 protocol CardListViewDelegate: class {
     func didDeleteCard(at row: Int)
+    func selectCard(at row: Int, for view: RestaurantCardView)
+    func deselectCard(at row: Int, for view: RestaurantCardView)
 }
 
 class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDelegate {
@@ -25,7 +27,6 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
     var cardViewType = RestaurantCardView.self
     var headerSpace: CGFloat = 250
     var cardGap: CGFloat = kCardDefault.cardGap
-    var cardWidth: CGFloat = kCardDefault.cardWidth
     var cardHeight: CGFloat = kCardDefault.cardHeight
     weak var dataSource: CardListViewDataSource?
     weak var cardListDelegate: CardListViewDelegate?
@@ -159,7 +160,6 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                         let row = view.row
                         cachedCells.removeValue(forKey: row)
                         view.isAnimating = true
-                        print("delete row \(row) card#\(view.number)")
                         view.propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
                             withDuration: CardListView.defaultAnimateDuration,
                             delay: 0.0,
@@ -174,12 +174,11 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                                 }
                                 view.center.y += 200
                         },completion: { (_) in
-                            print("complete card#\(view.number) deleted")
                             view.removeFromSuperview()
                             self.reusableCells.append(view)
                             self.tapCardEnabled = true
                         })
-                        let movingUpCards = cachedCells.filter({ $0.key > row }).values.sorted(by: { return $0.number < $1.number })
+                        let movingUpCards = cachedCells.filter({ $0.key > row }).values.sorted(by: { return $0.row < $1.row })
                         movingUpCards.forEach { $0.isAnimating = true; self.cachedCells[$0.row]=nil; $0.row-=1; self.cachedCells[$0.row]=$0 }
                         if showingDetail != nil {
                             toggleDetailModeFor(view: view, animated: true)
@@ -192,9 +191,6 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                                             movingUpCards.forEach{ $0.isAnimating = false; $0.propertyAnimator = nil }
                                             self.deletingCards.removeAll()
                                             self.propertyAnimator = nil
-                                            print("complete card#\(cardView.number) moving up since card#\(view.number) was deleted")
-                                        } else {
-                                            print("still moving card#\(cardView.number) up since card#\(view.number) was deleted, get \(self.deletingCards.count) deleted cards")
                                         }
                                         
                                     }
@@ -300,6 +296,7 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                     }
                 }
             }
+            cardListDelegate?.selectCard(at: view.row, for: view)
         } else {
             showingDetail = nil
             for row in view.row-cachedCells.count..<view.row {
@@ -360,6 +357,7 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                     }
                 }
             }
+            cardListDelegate?.deselectCard(at: view.row, for: view)
         }
     }
     
@@ -380,7 +378,6 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                         view.center = savedViewCenter
                     }
                     view.row = i
-//                    print("layoutListView: card#\(view.number) x=\(view.frame.origin.x)")
                     view.zDistance = kCardDefault.firstZDistance - CGFloat(i) * kCardDefault.deltaZDistance
                 }
 
@@ -404,13 +401,6 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
         view.propertyAnimator = nil
         view.isHidden = false
         dataSource?.updateData(for: view, at: index)
-        let cardViews = subviews.filter({ return $0.isKind(of: RestaurantCardView.self) }).map({ return $0 as! RestaurantCardView })
-        let sameNumberViews = cardViews.filter({ $0.number == view.number && $0 != view }).map { return $0.row }
-        print("row: \(index), number: \(view.number), others: \(sameNumberViews)")
-        assert(sameNumberViews.count == 0)
-        for cardView in cachedCells.values {
-            assert(view.number != cardView.number)
-        }
         return view
     }
     
@@ -422,10 +412,13 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
 extension CardListView {
     struct kCardDefault {
         static let cardHeight : CGFloat = 350
-        static let cardWidth : CGFloat = 230
-        static let cardGap : CGFloat = 150
+        static let cardGap : CGFloat = 120
         static let firstZDistance: CGFloat = 1/500
         static let deltaZDistance: CGFloat = 1e-10
+    }
+    
+    var cardWidth: CGFloat {
+        return bounds.width * 0.85
     }
     
     var defaultCardPosX: CGFloat {

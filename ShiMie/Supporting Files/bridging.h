@@ -14,4 +14,10 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 
+#import "CoordinateQuadTree.h"
+#import "ClusterAnnotation.h"
+#import "ClusterAnnotationView.h"
+#import "ClusterTableViewCell.h"
+#import "CustomCalloutView.h"
+
 #endif /* bridging_h */

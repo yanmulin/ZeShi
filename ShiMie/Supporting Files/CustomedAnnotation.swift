@@ -13,7 +13,7 @@ class CustomedAnnotation: MAPointAnnotation {
     weak var view: MAAnnotationView? {
         didSet {
             if type == .searchCenter, let view = view {
-                view.addShadowSubview()
+                view.addShadowSubview(at: CGPoint(x: 8, y: type.image!.size.height))
             }
         }
     }
@@ -24,15 +24,15 @@ class CustomedAnnotation: MAPointAnnotation {
     }
     
     override convenience init() {
-        self.init(with: .restaurant)
+        self.init(with: .restaurant(genre: 0))
     }
 }
 
 extension CustomedAnnotation {
-    enum annotationTyped {
+    enum annotationTyped: Equatable {
         case user
         case searchCenter
-        case restaurant
+        case restaurant(genre: Int)
         
         var identifier: String {
             switch self {
@@ -45,8 +45,8 @@ extension CustomedAnnotation {
         var image: UIImage? {
             switch self {
             case .user: return UIImage(named: "userLocationAnnotation")
-            case .searchCenter: return UIImage(named: "searchCenter-pin")
-            case .restaurant: return UIImage(named: "restaurantLocationAnnotation")
+            case .searchCenter: return UIImage(named: "location-flag")
+            case .restaurant: return UIImage(named: "restaraunt-icon")
 //            default: return nil
             }
         }
@@ -54,7 +54,7 @@ extension CustomedAnnotation {
         var centerOffset: CGPoint {
             switch self {
             case .searchCenter:
-                return CGPoint(x: 0, y: -image!.size.height/2)
+                return CGPoint(x: image!.size.width/2-1, y: -image!.size.height/2)
             default: return CGPoint(x: 0, y: 0)
             }
         }
