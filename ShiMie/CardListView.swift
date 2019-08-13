@@ -25,9 +25,6 @@ protocol CardListViewDelegate: class {
 class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDelegate {
     
     var cardViewType = RestaurantCardView.self
-    var headerSpace: CGFloat = 250
-    var cardGap: CGFloat = kCardDefault.cardGap
-    var cardHeight: CGFloat = kCardDefault.cardHeight
     weak var dataSource: CardListViewDataSource?
     weak var cardListDelegate: CardListViewDelegate?
     
@@ -52,9 +49,10 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
         if let row = showingDetail, let view = cachedCells[row] {
             let translation = panGestureRecognizer.translation(in: self)
             if abs(translation.y) > 10 * abs(translation.x) {
-                toggleDetailModeFor(view: view, animated: false)
+                toggleDetailModeFor(view: view, animated: true)
+                dismissDetailModeButton.isHidden = true
             } else {
-                contentOffset.y = view.center.y-bounds.height/2
+                contentOffset.y = bigScreen ? view.center.y - bounds.height / 2 : view.center.y - bounds.height + 150 + cardHeight / 2
             }
         }
     }
@@ -107,9 +105,9 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
     
     private func makeCardView() -> RestaurantCardView {
         let cardView = cardViewType.init()
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
-        cardView.addGestureRecognizer(pan)
-        pan.delegate = self
+//        let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(_:)))
+//        cardView.addGestureRecognizer(pan)
+//        pan.delegate = self
         let tap = UITapGestureRecognizer(target: self, action: #selector(tap(_:)))
         tap.require(toFail: panGestureRecognizer)
         cardView.addGestureRecognizer(tap)
@@ -119,27 +117,65 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
     private var tapTimestamp: TimeInterval = 0
     private var tapCardEnabled = true
     private var showingDetail: Int?
-    var propertyAnimator: UIViewPropertyAnimator?
+    
+    private lazy var dismissDetailModeButton: UIButton = { () -> UIButton in
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "dismiss"), for: .normal)
+//        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+//        button.layer.shadowColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+//        button.layer.shadowRadius = 2
+//        button.layer.shadowOpacity = 0.6
+        addSubview(button)
+        button.sizeToFit()
+//        button.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.2156862745, blue: 0.04705882353, alpha: 1)
+        button.center = CGPoint(x: bounds.center.x, y: bounds.height + 50)
+        button.isHidden = true
+        button.addTarget(self, action: #selector(dismissDetailMode(_:)), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc private func dismissDetailMode(_ sender: Any) {
+        if let showingDetail = showingDetail, let view = cachedCells[showingDetail] {
+            view.gestureRecognizers?.forEach { $0.isEnabled = true }
+            toggleDetailModeFor(view: view, animated: true)
+            dismissDetailModeButton.isEnabled = false
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: CardListView.defaultAnimateDuration, delay: 0.0, options: .curveEaseIn, animations: {
+                self.dismissDetailModeButton.center.y = self.contentOffset.y + self.bounds.height + 80
+            }) { (_) in
+                self.dismissDetailModeButton.isHidden = true
+            }
+            
+        }
+    }
     
     @objc private func tap(_ gr: UITapGestureRecognizer) {
         print("tap, contentOffset.y=\(self.contentOffset.y)")
         let curTimestamp = Date.timeIntervalSinceReferenceDate
         if curTimestamp - tapTimestamp > 2 * CardListView.defaultAnimateDuration && tapCardEnabled {
             tapTimestamp = curTimestamp
-            if let view = gr.view as? RestaurantCardView {
+            if let view = gr.view as? RestaurantCardView, view.showingDetail == false {
+                view.gestureRecognizers?.forEach { $0.isEnabled = false }
                 toggleDetailModeFor(view: view, animated: true)
+                dismissDetailModeButton.isHidden = false
+                dismissDetailModeButton.isEnabled = true
+                self.dismissDetailModeButton.center.y = contentOffset.y + bounds.height + 80
+                UIViewPropertyAnimator.runningPropertyAnimator(withDuration: CardListView.defaultAnimateDuration, delay: 0.0, options: .curveEaseIn, animations: {
+                    self.dismissDetailModeButton.center.y = self.contentOffset.y + self.bounds.height - 80
+                })
             }
         }
-            
+        
     }
     
-    private var deletingCards = Set<RestaurantCardView>()
+//    private var deletingCards = Set<RestaurantCardView>()
     private var animatingCards: [RestaurantCardView] {
         return cachedCells.values.filter{ return $0.isAnimating }
     }
     
+    // 左右滑动的删除手势，可能影响性能，暂不用
+    var propertyAnimator: UIViewPropertyAnimator?
     @objc private func pan(_ gr: UIPanGestureRecognizer) {
-        
+        if showingDetail != nil { return }
         if let view = gr.view as? RestaurantCardView {
             let translation = gr.translation(in: self)
             let velocity = gr.velocity(in: self)
@@ -155,90 +191,90 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                         gr.state = .cancelled
                     }
                 case .cancelled, .ended:
-                    if abs(velocity.x) > abs(velocity.y) * 2 && abs(translation.x) > bounds.width / 3 && abs(gr.velocity(in: self).x) > 400 {
-                        deletingCards.insert(view)
-                        let row = view.row
-                        cachedCells.removeValue(forKey: row)
-                        view.isAnimating = true
-                        view.propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
-                            withDuration: CardListView.defaultAnimateDuration,
-                            delay: 0.0,
-                            options: .curveEaseIn,
-                            animations: {
-                                if gr.velocity(in: self).x > 0 {
-                                    view.center.x =  self.bounds.width + self.cardWidth
-                                    view.transform = CGAffineTransform.identity.rotated(by: -CGFloat.pi / 6)
-                                } else {
-                                    view.center.x =  -self.cardWidth
-                                    view.transform = CGAffineTransform.identity.rotated(by: CGFloat.pi / 6)
-                                }
-                                view.center.y += 200
-                        },completion: { (_) in
-                            view.removeFromSuperview()
-                            self.reusableCells.append(view)
-                            self.tapCardEnabled = true
-                        })
-                        let movingUpCards = cachedCells.filter({ $0.key > row }).values.sorted(by: { return $0.row < $1.row })
-                        movingUpCards.forEach { $0.isAnimating = true; self.cachedCells[$0.row]=nil; $0.row-=1; self.cachedCells[$0.row]=$0 }
-                        if showingDetail != nil {
-                            toggleDetailModeFor(view: view, animated: true)
-                        } else {
-                            if (row < numberOfRows - 1) {
-                                let completion = { (_: UIViewAnimatingPosition) in
-                                    if let cardView = movingUpCards.first {
-//                                        let aboveDeletingCount = self.deletingCards.filter { $0.row < cardView.row }.count
-                                        if cardView.center == self.rect(for: cardView.row).center && self.deletingCards.count > 0 {
-                                            movingUpCards.forEach{ $0.isAnimating = false; $0.propertyAnimator = nil }
-                                            self.deletingCards.removeAll()
-                                            self.propertyAnimator = nil
-                                        }
-                                        
-                                    }
-                                }
-                                if let animator = propertyAnimator, animator.state == .active {
-                                    animator.addCompletion({ (_) in
-                                        UIViewPropertyAnimator.runningPropertyAnimator(
-                                        withDuration: CardListView.defaultAnimateDuration,
-                                        delay: 0.0,
-                                        options: [.curveEaseInOut, .allowUserInteraction],
-                                        animations: {
-                                            print("moving up")
-                                            movingUpCards.forEach{ $0.center.y -= self.cardGap }
-                                        },completion: completion)
-                                    })
-                                } else {
-                                    propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
-                                        withDuration: CardListView.defaultAnimateDuration,
-                                        delay: 0.0,
-                                        options: [.curveEaseInOut, .allowUserInteraction],
-                                        animations: {
-                                            print("moving up")
-                                            movingUpCards.forEach{ $0.center.y -= self.cardGap }
-                                    },completion: completion)
-                                }
-                            }
-                        }
-                        self.cardListDelegate?.didDeleteCard(at: row)
-                        self.reloadData()
-                        if row > numberOfRows - screenCardCount / 2 - 1 {
-                            setContentOffset(contentOffset.offset(dx: 0, dy: -self.cardGap), animated: true)
-                        }
-
-                    } else {
+//                    if abs(velocity.x) > abs(velocity.y) * 2 && abs(translation.x) > bounds.width / 3 && abs(gr.velocity(in: self).x) > 400 {
+//                        deletingCards.insert(view)
+//                        let row = view.row
+//                        cachedCells.removeValue(forKey: row)
+//                        view.isAnimating = true
+//                        UIViewPropertyAnimator.runningPropertyAnimator(
+//                            withDuration: CardListView.defaultAnimateDuration,
+//                            delay: 0.0,
+//                            options: .curveEaseIn,
+//                            animations: {
+//                                if gr.velocity(in: self).x > 0 {
+//                                    view.center.x =  self.bounds.width + self.cardWidth
+//                                    view.transform = CGAffineTransform.identity.rotated(by: -CGFloat.pi / 6)
+//                                } else {
+//                                    view.center.x =  -self.cardWidth
+//                                    view.transform = CGAffineTransform.identity.rotated(by: CGFloat.pi / 6)
+//                                }
+//                                view.center.y += 200
+//                        },completion: { (_) in
+//                            view.removeFromSuperview()
+//                            self.reusableCells.append(view)
+//                            self.tapCardEnabled = true
+//                        })
+//                        let movingUpCards = cachedCells.filter({ $0.key > row }).values.sorted(by: { return $0.row < $1.row })
+//                        movingUpCards.forEach { $0.isAnimating = true; self.cachedCells[$0.row]=nil; $0.row-=1; self.cachedCells[$0.row]=$0 }
+//                        if showingDetail != nil {
+//                            toggleDetailModeFor(view: view, animated: true)
+//                        } else {
+//                            if (row < numberOfRows - 1) {
+//                                let completion = { (_: UIViewAnimatingPosition) in
+//                                    if let cardView = movingUpCards.first {
+////                                        let aboveDeletingCount = self.deletingCards.filter { $0.row < cardView.row }.count
+//                                        if cardView.center == self.rect(for: cardView.row).center && self.deletingCards.count > 0 {
+//                                            movingUpCards.forEach{ $0.isAnimating = false;
+//                                            }
+//                                            self.deletingCards.removeAll()
+//                                            self.propertyAnimator = nil
+//                                        }
+//
+//                                    }
+//                                }
+//                                if let animator = propertyAnimator, animator.state == .active {
+//                                    animator.addCompletion({ (_) in
+//                                        UIViewPropertyAnimator.runningPropertyAnimator(
+//                                        withDuration: CardListView.defaultAnimateDuration,
+//                                        delay: 0.0,
+//                                        options: [.curveEaseInOut, .allowUserInteraction],
+//                                        animations: {
+//                                            print("moving up")
+//                                            movingUpCards.forEach{ $0.center.y -= self.cardGap }
+//                                        },completion: completion)
+//                                    })
+//                                } else {
+//                                    propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
+//                                        withDuration: CardListView.defaultAnimateDuration,
+//                                        delay: 0.0,
+//                                        options: [.curveEaseInOut, .allowUserInteraction],
+//                                        animations: {
+//                                            print("moving up")
+//                                            movingUpCards.forEach{ $0.center.y -= self.cardGap }
+//                                    },completion: completion)
+//                                }
+//                            }
+//                        }
+//                        self.cardListDelegate?.didDeleteCard(at: row)
+//                        self.reloadData()
+//                        if row > numberOfRows - screenCardCount / 2 - 1 {
+//                            setContentOffset(contentOffset.offset(dx: 0, dy: -self.cardGap), animated: true)
+//                        }
+//
+//                    } else {
                         tapCardEnabled = true
                         let rowRect = rect(for: view.row)
                         view.isAnimating = true
-                        view.propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
+                        UIViewPropertyAnimator.runningPropertyAnimator(
                             withDuration: CardListView.defaultAnimateDuration,
                             delay: 0.0,
                             options: [.curveEaseIn, .allowUserInteraction] ,
                             animations: {
-                                view.center.x = rowRect.center.x
+                                view.frame = rowRect
                             },completion: { (_) in
                                 view.isAnimating = false
-                                view.propertyAnimator = nil
                             })
-                    }
+//                    }
                 default: assert(false)
             }
         }
@@ -251,7 +287,7 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                 if let preView = cachedCells[row] {
                     if animated {
                         preView.isAnimating = true
-                        preView.propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
+                        UIViewPropertyAnimator.runningPropertyAnimator(
                             withDuration: CardListView.defaultAnimateDuration * 2,
                             delay: 0.0,
                             options: .curveEaseIn,
@@ -265,24 +301,24 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                     }
                 }
             }
-            view.tilt(to: CGFloat.zero, animated: animated)
+            view.showDetail(animated)
             if animated {
                 view.isAnimating = true
-                view.propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
+                UIViewPropertyAnimator.runningPropertyAnimator(
                     withDuration: CardListView.defaultAnimateDuration,
                     delay: 0.1,
                     options: .curveEaseInOut,
                     animations: {
-                        view.center.y = self.contentOffset.y + self.bounds.height / 2
+                        view.center.y = self.detailModeCardCenter.y
                 })
             } else {
-                view.center.y = self.contentOffset.y + self.bounds.height / 2
+                view.center.y = detailModeCardCenter.y
             }
             for row in view.row+1..<view.row+cachedCells.count {
                 if let postView = cachedCells[row] {
                     if animated {
                         postView.isAnimating = true
-                        postView.propertyAnimator = UIViewPropertyAnimator.runningPropertyAnimator(
+                        UIViewPropertyAnimator.runningPropertyAnimator(
                             withDuration: CardListView.defaultAnimateDuration * 2,
                             delay: 0.0,
                             options: .curveEaseIn,
@@ -311,16 +347,17 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                                 preView.center.y += self.bounds.height + self.cardHeight
                         }, completion: { (_) in
                             preView.isAnimating = false
-                            preView.propertyAnimator = nil
                         })
                     } else {
                         preView.center.y += self.bounds.height + self.cardHeight
                     }
                 }
             }
-            if !deletingCards.contains(view) {
+            
+//            if !deletingCards.contains(view) {
                 let rowRect = rect(for: view.row)
                 if animated {
+                    view.isAnimating = true
                     UIViewPropertyAnimator.runningPropertyAnimator(
                         withDuration: CardListView.defaultAnimateDuration,
                         delay: 0.1,
@@ -329,19 +366,21 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                             view.frame = rowRect
                     }, completion: { (_) in
                         view.isAnimating = false
-                        view.propertyAnimator = nil
                     })
                 } else {
-                    view.frame = rowRect
+                    view.center = rowRect.center
                 }
-                view.tilt(to: -CGFloat.pi / 6, animated: animated)
-            }
-            let startRow = !deletingCards.contains(view) ? view.row+1 : view.row
+                view.dismissDetail(animated)
+//            }
+//            let startRow = !deletingCards.contains(view) ? view.row+1 : view.row
+            let startRow = view.row+1
             for row in startRow..<view.row+cachedCells.count {
                 if let postView = cachedCells[row] {
                     //                            postView.isHidden = false
+                    
                     let rowRect = rect(for: row)
                     if animated {
+                        postView.isAnimating = true
                         UIViewPropertyAnimator.runningPropertyAnimator(
                             withDuration: CardListView.defaultAnimateDuration * 2,
                             delay: 0.0,
@@ -350,7 +389,6 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
                                 postView.center.y = rowRect.center.y
                         }, completion: { (_) in
                             postView.isAnimating = false
-                            postView.propertyAnimator = nil
                         })
                     } else {
                         postView.center.y = rowRect.center.y
@@ -371,14 +409,14 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
             let rowRect = rect(for: i)
             if visibleBounds.intersects(rowRect) {
                 let view = availableCells[i] ?? dequeueReusableView(at: i)
-                if view.isAnimating == false && view.propertyAnimator == nil {
+                if view.isAnimating == false  {
                     let savedViewCenter = view.center
                     view.frame = rowRect
                     if let state = view.gestureRecognizers?.first?.state, state == .changed {
                         view.center = savedViewCenter
                     }
                     view.row = i
-                    view.zDistance = kCardDefault.firstZDistance - CGFloat(i) * kCardDefault.deltaZDistance
+                    view.dismissDetail(false)
                 }
 
                 
@@ -398,8 +436,8 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
         let view = reusableCells.popLast() ?? makeCardView()
         view.frame.origin.x = defaultCardPosX
         view.isAnimating = false
-        view.propertyAnimator = nil
         view.isHidden = false
+        view.removeAllImages()
         dataSource?.updateData(for: view, at: index)
         return view
     }
@@ -410,15 +448,31 @@ class CardListView: UIScrollView, UIGestureRecognizerDelegate, UIScrollViewDeleg
 }
 
 extension CardListView {
-    struct kCardDefault {
-        static let cardHeight : CGFloat = 350
-        static let cardGap : CGFloat = 120
-        static let firstZDistance: CGFloat = 1/500
-        static let deltaZDistance: CGFloat = 1e-10
+    struct SizeRatio {
+        static let cardGap2BoundsHeight : CGFloat = 0.20
+        static let headerSpace2BoundsHeight : CGFloat = 0.30
+    }
+    
+    var cardGap: CGFloat {
+        return bounds.height * SizeRatio.cardGap2BoundsHeight
+    }
+    var cardHeight: CGFloat {
+        return cardWidth * 1.5
+    }
+    var headerSpace: CGFloat {
+        return bounds.height * SizeRatio.headerSpace2BoundsHeight
     }
     
     var cardWidth: CGFloat {
-        return bounds.width * 0.85
+        return bounds.width * 0.75
+    }
+    
+    var bigScreen: Bool {
+        return (bounds.height - cardHeight) / 2 - 150 > 0
+    }
+    
+    var detailModeCardCenter: CGPoint {
+        return bigScreen ? CGPoint(x: bounds.center.x, y: contentOffset.y + bounds.height/2) : CGPoint(x: bounds.center.x, y: contentOffset.y + bounds.height - cardHeight / 2 - 150)
     }
     
     var defaultCardPosX: CGFloat {

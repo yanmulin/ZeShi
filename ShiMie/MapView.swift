@@ -131,11 +131,11 @@ class MapView: MAMapView, MAMapViewDelegate {
         if mode == .edit {
             searchCircle.coordinate = mapView.centerCoordinate
             searchCenterPin.coordinate = mapView.centerCoordinate
+        } else {
+            addAnnotations(toMapView: self)
         }
         
-        addAnnotations(toMapView: self)
-        
-        // ??
+        // 确保userLocationPin 和 searchCenterPin在最上层
         selectAnnotation(searchCenterPin, animated: false)
     }
     
@@ -175,7 +175,7 @@ class MapView: MAMapView, MAMapViewDelegate {
     }
 
     private var loadingIndicator = UIActivityIndicatorView()
-    private var firstLoad = true {
+    var firstLoad = true {
         didSet {
             if firstLoad == false {
                 loadingIndicator.stopAnimating()

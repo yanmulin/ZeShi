@@ -40,8 +40,9 @@ class ExpandButtonView: UIView {
                 oldValue.removeFromSuperview()
             }
             if let newButton = self.upperButton {
-                newButton.frame = CGRect(origin: CGPoint.zero, size: upperButtonBoxRect.size)
+                newButton.frame.size = upperButtonBoxRect.size
                 upperButtonBoxView.addSubview(newButton)
+//                newButton.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.2156862745, blue: 0.04705882353, alpha: 1)
                 newButton.center = upperButtonBoxView.bounds.center
             }
         }
@@ -53,8 +54,9 @@ class ExpandButtonView: UIView {
                 oldValue.removeFromSuperview()
             }
             if let newButton = self.lowerButton {
-                newButton.frame = CGRect(origin: CGPoint.zero, size: lowerButtonBoxRect.size)
+                newButton.frame.size = lowerButtonBoxRect.size
                 lowerButtonBoxView.addSubview(newButton)
+//                newButton.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.2156862745, blue: 0.04705882353, alpha: 1)
                 newButton.center = lowerButtonBoxView.bounds.center
             }
         }
@@ -74,6 +76,7 @@ class ExpandButtonView: UIView {
         shapeLayer.lineWidth = mediumLineWidth
         view.layer.addSublayer(shapeLayer)
         addSubview(view)
+//        view.backgroundColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
         return view
     }
     
@@ -81,15 +84,16 @@ class ExpandButtonView: UIView {
         let path = UIBezierPath.init()
         let radius = min(rect.height, rect.width) / 2
         let startX = rect.width / 2 - radius
-        path.move(to: bounds.origin.offset(dx: 0, dy: radius * 2))
-        path.addLine(to: bounds.origin.offset(dx: 0, dy: radius))
+        path.move(to: bounds.origin.offset(dx: startX, dy: rect.maxY))
+        path.addLine(to: bounds.origin.offset(dx: startX, dy: radius))
         path.addArc(withCenter: bounds.origin.offset(dx: radius, dy: radius) , radius: radius, startAngle: CGFloat.pi, endAngle: CGFloat.pi * 2, clockwise: true)
-        path.addLine(to: bounds.origin.offset(dx: 2*radius, dy: 2*radius))
+        path.addLine(to: bounds.origin.offset(dx: rect.maxX - startX, dy: rect.maxY))
+        path.addLine(to: bounds.origin.offset(dx: startX, dy: rect.maxY))
         path.close()
         if inverse {
-            path.apply(CGAffineTransform.init(translationX: 2*radius, y: 2*radius).rotated(by: CGFloat.pi))
+            path.apply(CGAffineTransform.init(translationX: rect.maxX, y: rect.maxY).rotated(by: CGFloat.pi))
         }
-        path.apply(CGAffineTransform.init(translationX: rect.minX + startX, y: rect.minY))
+//        path.apply(CGAffineTransform.init(translationX: rect.minX + startX, y: rect.minY))
         return path
     }
     
@@ -153,7 +157,7 @@ extension ExpandButtonView {
 
     
     var mediumLineWidth: CGFloat {
-        return min(bounds.width, bounds.height) * 0.06
+        return 1
     }
     
     var upperButtonBoxRect: CGRect {
@@ -161,15 +165,15 @@ extension ExpandButtonView {
     }
     
     var lowerButtonBoxRect: CGRect {
-        return CGRect(x: 0, y: buttonHeight + sliderBoxHeight - 3 * mediumLineWidth, width: bounds.width, height: buttonHeight)
+        return CGRect(x: 0, y: buttonHeight + sliderBoxHeight, width: bounds.width, height: buttonHeight)
     }
     
     var sliderBoxRect: CGRect {
-        return CGRect(x: (bounds.width - sliderWidth) / 2, y: buttonHeight - 2.5 * mediumLineWidth, width: sliderWidth, height: sliderBoxHeight)
+        return CGRect(x: (bounds.width - sliderWidth) / 2, y: upperButtonBoxRect.maxY, width: sliderWidth, height: sliderBoxHeight)
     }
     
     var sliderBoxHeight: CGFloat {
-        return expand ? sliderHeight + 0.05 * bounds.height : 3 * mediumLineWidth
+        return expand ? sliderHeight + 0.05 * bounds.height : 5
     }
     
     var sliderWidth: CGFloat {

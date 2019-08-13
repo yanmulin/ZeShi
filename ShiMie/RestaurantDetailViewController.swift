@@ -11,7 +11,9 @@ import UIKit
 class RestaurantDetailViewController: UIViewController, POISearchManagerDelegate {
     
     var restaraut: Restaurant! {
-        didSet { poiSearchManager.search(for: restaraut.uid) }
+        didSet {
+            poiSearchManager.search(for: restaraut.uid);
+        }
     }
     
     private lazy var poiSearchManager: POISearchManager = { () -> POISearchManager in
@@ -51,6 +53,14 @@ class RestaurantDetailViewController: UIViewController, POISearchManagerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         cardView.loading = true
+        cardView.viewController = self
+        cardView.removeAllImages()
+        restaraut.fetchImage { [weak cardView, weak self] (image) in
+            cardView?.images.append(image)
+            if cardView?.images.count == self?.restaraut.images.count {
+                cardView?.setupImages()
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

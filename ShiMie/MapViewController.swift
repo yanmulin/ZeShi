@@ -24,6 +24,16 @@ import UIKit
 
 class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerTransitioningDelegate, POISearchManagerDelegate {
     
+    private func setupTitle(update: Bool = true) {
+        if mapView.mode == .edit {
+            title = "编辑模式"
+        }else if update == true && restarauts.count == 0 {
+            poiSearchManager.search(in: mapView.searchCenterPin.coordinate, with: CGFloat(mapView.searchCircle.radius))
+        } else {
+            title = "附近搜到\(restarauts.count)家餐厅"
+        }
+    }
+    
     var restarauts = [Restaurant]()
     
     private var transition = WavesTransition()
@@ -40,7 +50,10 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
             vc.restaraut = restarauts.randomElement()!
             vc.modalPresentationStyle = .custom
         } else if let vc = segue.destination as? CardListViewController {
-            vc.restaurants = restarauts
+            DispatchQueue.main.async {
+                vc.restaurants = self.restarauts
+                vc.cardListView.setNeedsReload()
+            }
         }
     }
     
@@ -69,28 +82,48 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var confirmButton: UIButton!
     
-    @IBOutlet weak var expandButtonView: ExpandButtonView!
+    @IBOutlet weak var expandButtonView: ExpandButtonView! {
+        didSet {
+            expandButtonView.layer.shadowColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+            expandButtonView.layer.shadowRadius = 2.0
+            expandButtonView.layer.shadowOffset = CGSize(width: 1, height: 1)
+            expandButtonView.layer.shadowOpacity = 0.6
+        }
+    }
     private var slider = UISlider()
     
-    private var locateButton = UIButton()
-    private var editButton = UIButton()
+    private lazy var locateButton = makeButton(UIImage(named: "locate"), #selector(locate(_:)))
+    
+    private lazy var editButton = makeButton(UIImage(named: "pencil"), #selector(edit(_:)))
+    
+    private func makeButton(_ image: UIImage?, _ selector: Selector) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: selector, for: .touchUpInside)
+        return button
+    }
     
     @IBOutlet weak var editModeBannerView: UIStackView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSlider(slider)
-        setupLocateButton(locateButton)
-        setupEditButton(editButton)
+        expandButtonView.upperButton = locateButton
+        expandButtonView.lowerButton = editButton
         setupEditModeButton(confirmButton)
         setupEditModeButton(cancelButton)
         poiSearchManager.delegate = self
-        
         view.isUserInteractionEnabled = false
         mapView.firstLoadCompletion = { [weak self] in
             self?.poiSearchManager.search(in: self!.mapView.searchCenterPin.coordinate, with: CGFloat(self!.mapView.searchCircle.radius))
             self?.view.isUserInteractionEnabled = true
-            
+        }
+        
+        LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters) { [weak self] (location) in
+            self?.mapView.userLocationPin.coordinate = location.coordinate
+            self?.mapView.setCenter(location.coordinate, animated: true)
+            self?.mapView.searchCircle.coordinate = location.coordinate
+            self?.mapView.searchCenterPin.coordinate = location.coordinate
         }
     }
     
@@ -101,19 +134,21 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters) { [weak self] (location) in
-            self?.mapView.setCenter(location.coordinate, animated: true)
-            self?.mapView.searchCircle.coordinate = location.coordinate
-            self?.mapView.searchCenterPin.coordinate = location.coordinate
-            self?.mapView.userLocationPin.coordinate = location.coordinate
-        }
+        setupTitle()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         poiSearchManager.cancelAllRequests()
+        title = "地图页"
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
+    private var lastSearchCenterCoordinate = kCLLocationCoordinate2DInvalid
+    private var lastSearchRadius: Double = 0
     @IBAction func cancelEditMode(_ sender: Any) {
         mapView.mode = .normal
         expandButtonView.expand = !expandButtonView.expand
@@ -125,13 +160,21 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
                                                         self.triggerButton.center.y -= 250
         }) { (_) in
             self.editModeBannerView.isHidden = !self.editModeBannerView.isHidden
-            self.title = ""
+            self.setupTitle()
         }
         editButton.isEnabled = true
+        mapView.searchCenterPin.coordinate = lastSearchCenterCoordinate
+        mapView.searchCircle.radius = lastSearchRadius
+        mapView.searchCircle.coordinate = lastSearchCenterCoordinate
+        mapView.setCenter(lastSearchCenterCoordinate, animated: true)
+        mapView.addAnnotations(toMapView: mapView)
     }
     @IBAction func confirmEditMode(_ sender: Any) {
-        mapView.mode = .normal
+        poiSearchManager.search(in: mapView.searchCenterPin.coordinate, with: CGFloat(mapView.searchCircle.radius))
         expandButtonView.expand = !expandButtonView.expand
+        mapView.coordinateQuadTree.clean()
+        mapView.updateMapViewAnnotations(annotations: nil)
+        restarauts.removeAll()
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                        delay: 0.0,
                                                        options: .curveEaseInOut,
@@ -141,11 +184,10 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
         }) { (_) in
             self.editModeBannerView.isHidden = !self.editModeBannerView.isHidden
             self.mapView.searchCenterPin.coordinate = self.mapView.centerCoordinate
-            self.title = ""
+            self.setupTitle()
         }
         editButton.isEnabled = true
-        restarauts.removeAll()
-        poiSearchManager.search(in: mapView.searchCenterPin.coordinate, with: CGFloat(mapView.searchCircle.radius))
+        self.mapView.mode = .normal
     }
     
     
@@ -176,13 +218,6 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
             }
         }
     }
-    
-    private func setupLocateButton(_ button: UIButton) {
-        expandButtonView.upperButton = button
-        button.setTitle("L", for: .normal)
-        button.setTitleColor(#colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1), for: .normal)
-        button.addTarget(self, action: #selector(locate(_:)), for: .touchUpInside)
-    }
     @objc private func locate(_ sender: Any) {
         print("click locate button")
         if mapView.mode == .edit {
@@ -195,8 +230,10 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
             }
             LocationManager.shared.locate (at: kCLLocationAccuracyNearestTenMeters) { [weak self] (location) in
                 self?.mapView.userLocationPin.coordinate = location.coordinate
-                self?.mapView.searchCircle.coordinate = location.coordinate
-                self?.mapView.searchCenterPin.coordinate = location.coordinate
+                if self?.mapView.mode == .edit {
+                    self?.mapView.searchCircle.coordinate = location.coordinate
+                    self?.mapView.searchCenterPin.coordinate = location.coordinate
+                }
             }
         } else {
             if let location = LocationManager.shared.lastLocation {
@@ -216,9 +253,7 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
     }
     @objc private func edit(_ sender: Any) {
         print("click edit button")
-        self.mapView.mode = .edit
-        editModeBannerView.isHidden = !editModeBannerView.isHidden
-        expandButtonView.expand = !expandButtonView.expand
+        poiSearchManager.cancelAllRequests()
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3,
                                                        delay: 0.0,
                                                        options: .curveEaseInOut,
@@ -226,12 +261,15 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
                                                         self.editModeBannerView.center.y -= 100
                                                         self.triggerButton.center.y += 250
         },completion: { (_) in
-            self.title = "编辑模式"
+            self.setupTitle()
         })
         editButton.isEnabled = false
-        mapView.coordinateQuadTree.clean()
         mapView.updateMapViewAnnotations(annotations: nil)
-        poiSearchManager.cancelAllRequests()
+        lastSearchCenterCoordinate = mapView.searchCenterPin.coordinate
+        lastSearchRadius = mapView.searchCircle.radius
+        self.mapView.mode = .edit
+        editModeBannerView.isHidden = !editModeBannerView.isHidden
+        expandButtonView.expand = !expandButtonView.expand
     }
 
     func onSearchDone(newPois: [AMapPOI], total: Int, first: Bool) {
@@ -240,6 +278,7 @@ class MapViewController: UIViewController, AMapSearchDelegate, UIViewControllerT
         }
         
         restarauts.append(contentsOf: newPois.map { Restaurant(with: $0) })
+        setupTitle(update: false)
         
         synchronized(lock: self) { [weak self] in
             self?.mapView.shouldRegionChangeReCalculate = false

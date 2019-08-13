@@ -12,7 +12,7 @@ class CardListViewController: UIViewController, CardListViewDataSource, CardList
     
     var cardListView: CardListView = CardListView()
     
-    var restaurants: [Restaurant]!
+    var restaurants = [Restaurant]()
     
     private lazy var poiSearchManager = { () -> POISearchManager in
         let searcher = POISearchManager()
@@ -30,8 +30,6 @@ class CardListViewController: UIViewController, CardListViewDataSource, CardList
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        cardListView.backgroundColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-        cardListView.headerSpace = view.bounds.height / 3
         cardListView.dataSource = self
         cardListView.cardListDelegate = self
         cardListView.frame = view.bounds
@@ -43,8 +41,8 @@ class CardListViewController: UIViewController, CardListViewDataSource, CardList
     }
     
     func updateData(for view: RestaurantCardView, at index: Int) {
-        view.isRolling = true
         view.setupCard(with: restaurants[index])
+        view.viewController = self
     }
     
     func didDeleteCard(at row: Int) {
@@ -62,6 +60,13 @@ class CardListViewController: UIViewController, CardListViewDataSource, CardList
         } else {
             view.setupCard(with: restaurants[row])
         }
+        view.images.removeAll()
+        restaurants[row].fetchImage { [weak view, weak self] (image) in
+            view?.images.append(image)
+            if view?.images.count == self?.restaurants[row].images.count {
+                view?.setupImages()
+            }
+        }
     }
     
     func deselectCard(at row: Int, for view: RestaurantCardView) {
@@ -70,4 +75,6 @@ class CardListViewController: UIViewController, CardListViewDataSource, CardList
         selectedCardView = nil
         view.loading = false
     }
+    
+    
 }

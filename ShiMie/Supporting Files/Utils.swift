@@ -33,6 +33,10 @@ extension CGRect {
         return self.origin.offset(dx: 0, dy: self.height)
     }
     
+    var leftTop: CGPoint {
+        return self.origin
+    }
+    
     var rightBottom: CGPoint {
         return self.origin.offset(dx: self.width, dy: self.height)
     }

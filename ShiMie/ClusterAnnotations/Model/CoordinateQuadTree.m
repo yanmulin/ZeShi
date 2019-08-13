@@ -257,6 +257,7 @@ BoundingBox quadTreeNodeDataArrayForPOIs(QuadTreeNodeData *dataArray, NSArray * 
 #pragma mark Operations
 
 - (void)insertPoi:(AMapPOI *)poi {
+    assert(poi != NULL);
     if (self.count < 0 || self.count == self.maxCount) {
         @throw @"insert too much poi into CoordinateQuadTree";
     }
@@ -268,7 +269,6 @@ BoundingBox quadTreeNodeDataArrayForPOIs(QuadTreeNodeData *dataArray, NSArray * 
     if (self.count == 0) {
         self.root = QuadTreeNodeMake(self.maxBounding, self.maxCount);
     }
-    
     QuadTreeNodeInsertData(self.root, data);
     self.count ++;
 }

@@ -45,7 +45,7 @@ extension CustomedAnnotation {
         var image: UIImage? {
             switch self {
             case .user: return UIImage(named: "userLocationAnnotation")
-            case .searchCenter: return UIImage(named: "location-flag")
+            case .searchCenter: return UIImage(named: "fork")
             case .restaurant: return UIImage(named: "restaraunt-icon")
 //            default: return nil
             }
@@ -54,7 +54,8 @@ extension CustomedAnnotation {
         var centerOffset: CGPoint {
             switch self {
             case .searchCenter:
-                return CGPoint(x: image!.size.width/2-1, y: -image!.size.height/2)
+//                return CGPoint(x: image!.size.width/2-1, y: -image!.size.height/2)
+                return CGPoint(x: 0, y: -image!.size.height/2)
             default: return CGPoint(x: 0, y: 0)
             }
         }

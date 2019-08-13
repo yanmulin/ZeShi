@@ -40,6 +40,7 @@ CGFloat ScaledValueForValue(CGFloat value)
 @interface ClusterAnnotationView ()
 
 @property (nonatomic, strong) UILabel *countLabel;
+@property (nonatomic, strong) UIImageView *countBgImageView;
 
 @end
 
@@ -55,7 +56,7 @@ CGFloat ScaledValueForValue(CGFloat value)
         self.backgroundColor = [UIColor clearColor];
         self.image = [UIImage imageNamed:@"restaraunt-icon"];
         [self.imageView sizeToFit];
-        [self setupLabel];
+        [self setupCountBadge];
         [self setCount:1];        
     }
     
@@ -64,19 +65,27 @@ CGFloat ScaledValueForValue(CGFloat value)
 
 #pragma mark Utility
 
-- (void)setupLabel
+- (void)setupCountBadge
 {
     _countLabel = [[UILabel alloc] initWithFrame:self.frame];
-    _countLabel.backgroundColor = [UIColor redColor];
+//    _countLabel.backgroundColor = [UIColor redColor];
+    _countLabel.backgroundColor = [UIColor clearColor];
     _countLabel.textColor       = [UIColor whiteColor];
+//    _countLabel.layer.shadowOpacity = 0.8;
+//    _countLabel.layer.shadowRadius = 2.0;
+//    _countLabel.layer.shadowOffset = CGSizeMake(1, 1);
+//    _countLabel.layer.shadowColor = [UIColor blackColor].CGColor;
     _countLabel.textAlignment   = NSTextAlignmentCenter;
-//    _countLabel.shadowColor     = [UIColor colorWithWhite:0.0 alpha:0.75];
-//    _countLabel.shadowOffset    = CGSizeMake(0, -1);
     _countLabel.adjustsFontSizeToFitWidth = YES;
     _countLabel.numberOfLines = 1;
     _countLabel.clipsToBounds = YES;
-    _countLabel.font = [UIFont boldSystemFontOfSize:12];
+    _countLabel.font = [UIFont systemFontOfSize:12];
     _countLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+    _countBgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sun-egg"]];
+    [_countBgImageView sizeToFit];
+    _countBgImageView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    [self addSubview:_countBgImageView];
     [self addSubview:_countLabel];
 }
 
@@ -109,8 +118,10 @@ CGFloat ScaledValueForValue(CGFloat value)
     self.frame = CenterRect(newBounds, self.center);
     
     CGRect newLabelBounds = CGRectMake(0, 0, newBounds.size.width / 3, newBounds.size.height / 3);
+    CGRect newLabelBgViewBounds = CGRectMake(0, 0, newBounds.size.width / 3 + 8, newBounds.size.height / 3 + 8);
     self.countLabel.frame = CenterRect(newLabelBounds, CGPointMake(CGRectGetMaxX(newBounds) - newLabelBounds.size.width / 2, newLabelBounds.size.height / 2));
-    self.countLabel.layer.cornerRadius = newLabelBounds.size.width / 2;
+    self.countBgImageView.frame = CenterRect(newLabelBgViewBounds, self.countLabel.center);
+//    self.countLabel.layer.cornerRadius = newLabelBounds.size.width / 2;
     self.countLabel.text = [@(_count) stringValue];
     
     [self setNeedsDisplay];
