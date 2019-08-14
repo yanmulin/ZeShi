@@ -1,0 +1,570 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		17109D6722DE275C00CA0198 /* AmapStyle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 17109D6622DE275C00CA0198 /* AmapStyle.bundle */; };
+		1716003D2303D3ED00AE2040 /* bridging.h in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBF1022D08970004689AB /* bridging.h */; };
+		172B5A6E22EF07DA00BFB2BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */; };
+		175F4BEB22F0C37E00C3A007 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175F4BEA22F0C37E00C3A007 /* MapView.swift */; };
+		175F4BEF22F16F1600C3A007 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175F4BEE22F16F1600C3A007 /* LocationManager.swift */; };
+		17873BE022F01B52002DBC5E /* CustomedAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */; };
+		179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CD22D832DA0085BE33 /* CardListView.swift */; };
+		179EF1D022DA2E860085BE33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1CF22DA2E860085BE33 /* Utils.swift */; };
+		179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */; };
+		179FC85322F93393005AF7CB /* POISearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC85222F93393005AF7CB /* POISearchManager.swift */; };
+		179FC85522F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC85422F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift */; };
+		179FC88522F96391005AF7CB /* ClusterAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88022F96391005AF7CB /* ClusterAnnotation.m */; };
+		179FC88622F96391005AF7CB /* CoordinateQuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88122F96391005AF7CB /* CoordinateQuadTree.m */; };
+		179FC88722F96391005AF7CB /* QuadTree.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88322F96391005AF7CB /* QuadTree.m */; };
+		179FC88822F963A9005AF7CB /* ClusterAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87322F962CE005AF7CB /* ClusterAnnotationView.m */; };
+		179FC88922F963A9005AF7CB /* ClusterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87522F962CE005AF7CB /* ClusterTableViewCell.m */; };
+		179FC88A22F963A9005AF7CB /* CustomCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87822F962CE005AF7CB /* CustomCalloutView.m */; };
+		179FC88B22F963B2005AF7CB /* ClusterAnnotation.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87F22F96391005AF7CB /* ClusterAnnotation.h */; };
+		179FC88C22F963B2005AF7CB /* CoordinateQuadTree.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88422F96391005AF7CB /* CoordinateQuadTree.h */; };
+		179FC88D22F963B2005AF7CB /* QuadTree.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC88222F96391005AF7CB /* QuadTree.h */; };
+		179FC88E22F963B7005AF7CB /* ClusterTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87622F962CE005AF7CB /* ClusterTableViewCell.h */; };
+		179FC88F22F963B7005AF7CB /* CustomCalloutView.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87422F962CE005AF7CB /* CustomCalloutView.h */; };
+		179FC89022F963B7005AF7CB /* ClusterAnnotationView.h in Sources */ = {isa = PBXBuildFile; fileRef = 179FC87722F962CE005AF7CB /* ClusterAnnotationView.h */; };
+		179FC89222FBC1B0005AF7CB /* RestaurantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC89122FBC1B0005AF7CB /* RestaurantDetailViewController.swift */; };
+		179FC89422FBFF45005AF7CB /* WavesTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179FC89322FBFF45005AF7CB /* WavesTransition.swift */; };
+		17EDBED722D079FA004689AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBED622D079FA004689AB /* AppDelegate.swift */; };
+		17EDBED922D079FA004689AB /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBED822D079FA004689AB /* MapViewController.swift */; };
+		17EDBEDC22D079FA004689AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBEDA22D079FA004689AB /* Main.storyboard */; };
+		17EDBEE122D079FB004689AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBEDF22D079FB004689AB /* LaunchScreen.storyboard */; };
+		17EDBF0B22D07AC0004689AB /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 17EDBF0A22D07AC0004689AB /* Podfile */; };
+		17EDBF1422D0AB4B004689AB /* CardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBF1322D0AB4B004689AB /* CardListViewController.swift */; };
+		17EDBF1622D0AC27004689AB /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBF1522D0AC27004689AB /* Restaurant.swift */; };
+		17EDBF1A22D0BF52004689AB /* RestaurantCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EDBF1922D0BF52004689AB /* RestaurantCardView.swift */; };
+		F82559B98EB968C3CCE34AC6 /* libPods-ZeShi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C715F83E5010BA667035C24 /* libPods-ZeShi.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		17109D6622DE275C00CA0198 /* AmapStyle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AmapStyle.bundle; sourceTree = "<group>"; };
+		172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		175F4BEA22F0C37E00C3A007 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		175F4BEE22F16F1600C3A007 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomedAnnotation.swift; sourceTree = "<group>"; };
+		179EF1CD22D832DA0085BE33 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
+		179EF1CF22DA2E860085BE33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandButtonView.swift; sourceTree = "<group>"; };
+		179FC85222F93393005AF7CB /* POISearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISearchManager.swift; sourceTree = "<group>"; };
+		179FC85422F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomedPOIAroundSearchRequest.swift; sourceTree = "<group>"; };
+		179FC87322F962CE005AF7CB /* ClusterAnnotationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClusterAnnotationView.m; sourceTree = "<group>"; };
+		179FC87422F962CE005AF7CB /* CustomCalloutView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomCalloutView.h; sourceTree = "<group>"; };
+		179FC87522F962CE005AF7CB /* ClusterTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClusterTableViewCell.m; sourceTree = "<group>"; };
+		179FC87622F962CE005AF7CB /* ClusterTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClusterTableViewCell.h; sourceTree = "<group>"; };
+		179FC87722F962CE005AF7CB /* ClusterAnnotationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClusterAnnotationView.h; sourceTree = "<group>"; };
+		179FC87822F962CE005AF7CB /* CustomCalloutView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomCalloutView.m; sourceTree = "<group>"; };
+		179FC87F22F96391005AF7CB /* ClusterAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClusterAnnotation.h; sourceTree = "<group>"; };
+		179FC88022F96391005AF7CB /* ClusterAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClusterAnnotation.m; sourceTree = "<group>"; };
+		179FC88122F96391005AF7CB /* CoordinateQuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinateQuadTree.m; sourceTree = "<group>"; };
+		179FC88222F96391005AF7CB /* QuadTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuadTree.h; sourceTree = "<group>"; };
+		179FC88322F96391005AF7CB /* QuadTree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuadTree.m; sourceTree = "<group>"; };
+		179FC88422F96391005AF7CB /* CoordinateQuadTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinateQuadTree.h; sourceTree = "<group>"; };
+		179FC89122FBC1B0005AF7CB /* RestaurantDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantDetailViewController.swift; sourceTree = "<group>"; };
+		179FC89322FBFF45005AF7CB /* WavesTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavesTransition.swift; sourceTree = "<group>"; };
+		17EDBED322D079FA004689AB /* ZeShi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZeShi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		17EDBED622D079FA004689AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		17EDBED822D079FA004689AB /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		17EDBEDB22D079FA004689AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		17EDBEE022D079FB004689AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		17EDBEE222D079FB004689AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		17EDBF0A22D07AC0004689AB /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		17EDBF1022D08970004689AB /* bridging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridging.h; sourceTree = "<group>"; };
+		17EDBF1322D0AB4B004689AB /* CardListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListViewController.swift; sourceTree = "<group>"; };
+		17EDBF1522D0AC27004689AB /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
+		17EDBF1922D0BF52004689AB /* RestaurantCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCardView.swift; sourceTree = "<group>"; };
+		315CF2654A238BC79044D282 /* libPods-ShiMie.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShiMie.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E61A2A116E35858C237B69B /* Pods-ShiMie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShiMie.debug.xcconfig"; path = "Target Support Files/Pods-ShiMie/Pods-ShiMie.debug.xcconfig"; sourceTree = "<group>"; };
+		7D2F5E96C247EBF3C8C3A087 /* Pods-ZeShi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZeShi.debug.xcconfig"; path = "Target Support Files/Pods-ZeShi/Pods-ZeShi.debug.xcconfig"; sourceTree = "<group>"; };
+		9C715F83E5010BA667035C24 /* libPods-ZeShi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ZeShi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0535A2EC796F65230132724 /* Pods-ShiMie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShiMie.release.xcconfig"; path = "Target Support Files/Pods-ShiMie/Pods-ShiMie.release.xcconfig"; sourceTree = "<group>"; };
+		EFBF6588F53A8494CB48F892 /* Pods-ZeShi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZeShi.release.xcconfig"; path = "Target Support Files/Pods-ZeShi/Pods-ZeShi.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		17EDBED022D079FA004689AB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F82559B98EB968C3CCE34AC6 /* libPods-ZeShi.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		179FC86A22F962B7005AF7CB /* ClusterAnnotations */ = {
+			isa = PBXGroup;
+			children = (
+				179FC86B22F962B7005AF7CB /* Model */,
+				179FC86C22F962B7005AF7CB /* View */,
+			);
+			path = ClusterAnnotations;
+			sourceTree = "<group>";
+		};
+		179FC86B22F962B7005AF7CB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				179FC87F22F96391005AF7CB /* ClusterAnnotation.h */,
+				179FC88022F96391005AF7CB /* ClusterAnnotation.m */,
+				179FC88422F96391005AF7CB /* CoordinateQuadTree.h */,
+				179FC88122F96391005AF7CB /* CoordinateQuadTree.m */,
+				179FC88222F96391005AF7CB /* QuadTree.h */,
+				179FC88322F96391005AF7CB /* QuadTree.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		179FC86C22F962B7005AF7CB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				179FC87622F962CE005AF7CB /* ClusterTableViewCell.h */,
+				179FC87422F962CE005AF7CB /* CustomCalloutView.h */,
+				179FC87322F962CE005AF7CB /* ClusterAnnotationView.m */,
+				179FC87522F962CE005AF7CB /* ClusterTableViewCell.m */,
+				179FC87822F962CE005AF7CB /* CustomCalloutView.m */,
+				179FC87722F962CE005AF7CB /* ClusterAnnotationView.h */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		17EDBECA22D079FA004689AB = {
+			isa = PBXGroup;
+			children = (
+				17109D6622DE275C00CA0198 /* AmapStyle.bundle */,
+				17EDBED522D079FA004689AB /* ZeShi */,
+				17EDBF0C22D07B9D004689AB /* Supporting Files */,
+				17EDBF0A22D07AC0004689AB /* Podfile */,
+				17EDBED422D079FA004689AB /* Products */,
+				26ABD448D6D7CB0FA93FB4AB /* Pods */,
+				3BD6118E4AA45A8EB63382A5 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		17EDBED422D079FA004689AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				17EDBED322D079FA004689AB /* ZeShi.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		17EDBED522D079FA004689AB /* ZeShi */ = {
+			isa = PBXGroup;
+			children = (
+				179FC89322FBFF45005AF7CB /* WavesTransition.swift */,
+				175F4BEA22F0C37E00C3A007 /* MapView.swift */,
+				179EF1CD22D832DA0085BE33 /* CardListView.swift */,
+				179FC85222F93393005AF7CB /* POISearchManager.swift */,
+				17EDBF1922D0BF52004689AB /* RestaurantCardView.swift */,
+				179FC89122FBC1B0005AF7CB /* RestaurantDetailViewController.swift */,
+				17EDBED822D079FA004689AB /* MapViewController.swift */,
+				179EF1D122DC1BF50085BE33 /* ExpandButtonView.swift */,
+				17EDBF1322D0AB4B004689AB /* CardListViewController.swift */,
+				17EDBF1522D0AC27004689AB /* Restaurant.swift */,
+				17EDBEE222D079FB004689AB /* Info.plist */,
+				179FC86A22F962B7005AF7CB /* ClusterAnnotations */,
+			);
+			path = ZeShi;
+			sourceTree = "<group>";
+		};
+		17EDBF0C22D07B9D004689AB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				175F4BEE22F16F1600C3A007 /* LocationManager.swift */,
+				179FC85422F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift */,
+				17873BDF22F01B52002DBC5E /* CustomedAnnotation.swift */,
+				172B5A6D22EF07DA00BFB2BD /* Assets.xcassets */,
+				17EDBF1022D08970004689AB /* bridging.h */,
+				17EDBED622D079FA004689AB /* AppDelegate.swift */,
+				17EDBEDF22D079FB004689AB /* LaunchScreen.storyboard */,
+				17EDBEDA22D079FA004689AB /* Main.storyboard */,
+				179EF1CF22DA2E860085BE33 /* Utils.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		26ABD448D6D7CB0FA93FB4AB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3E61A2A116E35858C237B69B /* Pods-ShiMie.debug.xcconfig */,
+				B0535A2EC796F65230132724 /* Pods-ShiMie.release.xcconfig */,
+				7D2F5E96C247EBF3C8C3A087 /* Pods-ZeShi.debug.xcconfig */,
+				EFBF6588F53A8494CB48F892 /* Pods-ZeShi.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		3BD6118E4AA45A8EB63382A5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				315CF2654A238BC79044D282 /* libPods-ShiMie.a */,
+				9C715F83E5010BA667035C24 /* libPods-ZeShi.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		17EDBED222D079FA004689AB /* ZeShi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 17EDBEE522D079FB004689AB /* Build configuration list for PBXNativeTarget "ZeShi" */;
+			buildPhases = (
+				3CDEDE3959D644A5B7820B84 /* [CP] Check Pods Manifest.lock */,
+				17EDBECF22D079FA004689AB /* Sources */,
+				17EDBED022D079FA004689AB /* Frameworks */,
+				17EDBED122D079FA004689AB /* Resources */,
+				C5E600E002089036B32548A7 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZeShi;
+			productName = ShiMie;
+			productReference = 17EDBED322D079FA004689AB /* ZeShi.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		17EDBECB22D079FA004689AB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1020;
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = yanmulin;
+				TargetAttributes = {
+					17EDBED222D079FA004689AB = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 17EDBECE22D079FA004689AB /* Build configuration list for PBXProject "ZeShi" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 17EDBECA22D079FA004689AB;
+			productRefGroup = 17EDBED422D079FA004689AB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				17EDBED222D079FA004689AB /* ZeShi */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		17EDBED122D079FA004689AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17109D6722DE275C00CA0198 /* AmapStyle.bundle in Resources */,
+				17EDBEE122D079FB004689AB /* LaunchScreen.storyboard in Resources */,
+				17EDBF0B22D07AC0004689AB /* Podfile in Resources */,
+				17EDBEDC22D079FA004689AB /* Main.storyboard in Resources */,
+				172B5A6E22EF07DA00BFB2BD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3CDEDE3959D644A5B7820B84 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ZeShi-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C5E600E002089036B32548A7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZeShi/Pods-ZeShi-resources.sh",
+				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZeShi/Pods-ZeShi-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		17EDBECF22D079FA004689AB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1716003D2303D3ED00AE2040 /* bridging.h in Sources */,
+				179FC88E22F963B7005AF7CB /* ClusterTableViewCell.h in Sources */,
+				179FC88F22F963B7005AF7CB /* CustomCalloutView.h in Sources */,
+				179FC89022F963B7005AF7CB /* ClusterAnnotationView.h in Sources */,
+				179FC88B22F963B2005AF7CB /* ClusterAnnotation.h in Sources */,
+				179FC88C22F963B2005AF7CB /* CoordinateQuadTree.h in Sources */,
+				179FC88D22F963B2005AF7CB /* QuadTree.h in Sources */,
+				179FC88822F963A9005AF7CB /* ClusterAnnotationView.m in Sources */,
+				179FC88922F963A9005AF7CB /* ClusterTableViewCell.m in Sources */,
+				179FC88A22F963A9005AF7CB /* CustomCalloutView.m in Sources */,
+				179FC88522F96391005AF7CB /* ClusterAnnotation.m in Sources */,
+				179EF1D222DC1BF50085BE33 /* ExpandButtonView.swift in Sources */,
+				179FC88722F96391005AF7CB /* QuadTree.m in Sources */,
+				179FC88622F96391005AF7CB /* CoordinateQuadTree.m in Sources */,
+				17EDBF1622D0AC27004689AB /* Restaurant.swift in Sources */,
+				17EDBF1422D0AB4B004689AB /* CardListViewController.swift in Sources */,
+				17EDBED922D079FA004689AB /* MapViewController.swift in Sources */,
+				179EF1D022DA2E860085BE33 /* Utils.swift in Sources */,
+				179FC89222FBC1B0005AF7CB /* RestaurantDetailViewController.swift in Sources */,
+				17873BE022F01B52002DBC5E /* CustomedAnnotation.swift in Sources */,
+				17EDBF1A22D0BF52004689AB /* RestaurantCardView.swift in Sources */,
+				179FC85322F93393005AF7CB /* POISearchManager.swift in Sources */,
+				179FC89422FBFF45005AF7CB /* WavesTransition.swift in Sources */,
+				175F4BEB22F0C37E00C3A007 /* MapView.swift in Sources */,
+				179EF1CE22D832DA0085BE33 /* CardListView.swift in Sources */,
+				175F4BEF22F16F1600C3A007 /* LocationManager.swift in Sources */,
+				17EDBED722D079FA004689AB /* AppDelegate.swift in Sources */,
+				179FC85522F93B23005AF7CB /* CustomedPOIAroundSearchRequest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		17EDBEDA22D079FA004689AB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				17EDBEDB22D079FA004689AB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		17EDBEDF22D079FB004689AB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				17EDBEE022D079FB004689AB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		17EDBEE322D079FB004689AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		17EDBEE422D079FB004689AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		17EDBEE622D079FB004689AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7D2F5E96C247EBF3C8C3A087 /* Pods-ZeShi.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 78Z7W3U73B;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/ZeShi/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.YML.zeshi;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Supporting Files/bridging.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		17EDBEE722D079FB004689AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFBF6588F53A8494CB48F892 /* Pods-ZeShi.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 78Z7W3U73B;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/ZeShi/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.YML.zeshi;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Supporting Files/bridging.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		17EDBECE22D079FA004689AB /* Build configuration list for PBXProject "ZeShi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17EDBEE322D079FB004689AB /* Debug */,
+				17EDBEE422D079FB004689AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		17EDBEE522D079FB004689AB /* Build configuration list for PBXNativeTarget "ZeShi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17EDBEE622D079FB004689AB /* Debug */,
+				17EDBEE722D079FB004689AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 17EDBECB22D079FA004689AB /* Project object */;
+}
